@@ -1,4 +1,4 @@
-package com.jakub.bone;
+package com.jakub.bone.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

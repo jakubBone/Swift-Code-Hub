@@ -88,3 +88,8 @@ nb-configuration.xml
 ## Miscellaneous
 ##############################
 *.log
+
+##############################
+## JOOQ
+##############################
+src/main/java/com/jakub/bone/generated/
