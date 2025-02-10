@@ -15,7 +15,7 @@ public class SwiftCodeRepository {
         this.CONTEXT = dsl;
     }
 
-    public void insertSwiftCodes (List<SwiftCode> swiftCodes) throws SQLException {
+    public void insertSwiftCodes(List<SwiftCode> swiftCodes) throws SQLException {
         for (SwiftCode code : swiftCodes) {
             CONTEXT.insertInto(table("swift_codes"),
                             field("country_iso2"),

@@ -23,8 +23,8 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.5.4'
     jooqGenerator 'org.postgresql:postgresql:42.5.4'
 
-    // Apache POI
-    implementation group: 'org.apache.poi', name: 'poi', version: '5.4.0'
+    // Apache POI (XLSX files handling)
+    implementation 'org.apache.poi:poi-ooxml:5.2.3'
 
     // JUnit
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
@@ -40,7 +40,7 @@ jooq {
                     driver = 'org.postgresql.Driver'
                     url = 'jdbc:postgresql://localhost:5432/swift_db'
                     user = 'swift_user'
-                    password = 'swift123!!'
+                    password = 'swift123'
                 }
                 generator {
                     name = 'org.jooq.codegen.DefaultGenerator'
