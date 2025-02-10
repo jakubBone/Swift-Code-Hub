@@ -1,7 +1,7 @@
 import com.jakub.bone.database.Database;
 
 import com.jakub.bone.utills.ExcelImporter;
-import com.jakub.bone.utills.SwiftCode;
+import com.jakub.bone.domain.SwiftCode;
 
 import java.io.IOException;
 import java.sql.SQLException;

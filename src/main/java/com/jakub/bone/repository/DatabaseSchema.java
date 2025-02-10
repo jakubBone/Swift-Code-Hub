@@ -5,15 +5,15 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 
 public class DatabaseSchema {
-    private final DSLContext CONTEXT;
+    private final DSLContext context;
 
-    public DatabaseSchema(DSLContext dsl) {
-        this.CONTEXT = dsl;
+    public DatabaseSchema(DSLContext context) {
+        this.context = context;
         createTable();
     }
 
     public void createTable() {
-        CONTEXT.createTableIfNotExists("swing_codes")
+        context.createTableIfNotExists("swing_codes")
                 .column("id", SQLDataType.INTEGER.identity(true))
                 .column("country_iso2", SQLDataType.VARCHAR)
                 .column("swift_code", SQLDataType.VARCHAR)
@@ -27,6 +27,6 @@ public class DatabaseSchema {
     }
 
     public void clearTables(){
-        CONTEXT.truncate("swing_codes").restartIdentity().execute();
+        context.truncate("swing_codes").restartIdentity().execute();
     }
 }

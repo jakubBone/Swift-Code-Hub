@@ -20,8 +20,4 @@ public class ConfigLoader {
     public static String get(String key) {
         return properties.getProperty(key);
     }
-
-    public static int getInt(String key) {
-        return Integer.parseInt(properties.getProperty(key));
-    }
 }

@@ -15,20 +15,20 @@ import org.jooq.impl.DSL;
 @Log4j2
 @Getter
 public class Database {
-    private final String DATABASE = ConfigLoader.get("database.name");
-    private final String USERNAME = ConfigLoader.get("database.username");
-    private final String PASSWORD = ConfigLoader.get("database.password");
-    private final String URL = String.format("jdbc:postgresql://localhost:%d/%s", 5432, DATABASE);
-    private final DSLContext CONTEXT;
+    private final String database = ConfigLoader.get("database.name");
+    private final String username = ConfigLoader.get("database.username");
+    private final String password = ConfigLoader.get("database.password");
+    private final String url = String.format("jdbc:postgresql://localhost:%d/%s", 5432, database);
+    private final DSLContext context;
     private final DatabaseSchema databaseSchema;
     private final SwiftCodeRepository codeRepository;
     private Connection connection;
 
     public Database() throws SQLException {
         this.connection = getDatabaseConnection();
-        this.CONTEXT = DSL.using(connection);
-        this.databaseSchema = new DatabaseSchema(CONTEXT);
-        this.codeRepository = new SwiftCodeRepository(CONTEXT);
+        this.context = DSL.using(connection);
+        this.databaseSchema = new DatabaseSchema(context);
+        this.codeRepository = new SwiftCodeRepository(context);
 
     }
 
@@ -37,10 +37,10 @@ public class Database {
             return connection;
         }
         try {
-            this.connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            log.info("Connection established successfully with database '{}' on port {}", DATABASE, 5432);
+            this.connection = DriverManager.getConnection(url, username, password);
+            log.info("Connection established successfully with database '{}' on port {}", database, 5432);
         } catch (SQLException ex) {
-            log.error("Failed to establish connection to the database '{}'. Error: {}", DATABASE, ex.getMessage(), ex);
+            log.error("Failed to establish connection to the database '{}'. Error: {}", database, ex.getMessage(), ex);
         }
         return connection;
     }
@@ -49,7 +49,7 @@ public class Database {
         if (connection != null) {
             try {
                 connection.close();
-                log.info("Connection to database '{}' closed successfully.", DATABASE);
+                log.info("Connection to database '{}' closed successfully.", database);
             } catch (SQLException ex) {
                 log.error("Failed to close connection. Error: {}", ex.getMessage(), ex);
             }

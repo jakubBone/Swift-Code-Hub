@@ -1,4 +1,4 @@
-package com.jakub.bone.utills;
+package com.jakub.bone.domain;
 
 import lombok.Getter;
 

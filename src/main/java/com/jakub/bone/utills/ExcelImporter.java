@@ -1,5 +1,6 @@
 package com.jakub.bone.utills;
 
+import com.jakub.bone.domain.SwiftCode;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -10,12 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExcelImporter {
-    private static final String FILE_PATH = ConfigLoader.get("database.swift_codes");
+    private static final String file_path = ConfigLoader.get("database.swift_codes");
 
     public static List<SwiftCode> getExcelFile() throws IOException {
         List<SwiftCode> swiftCodes = new ArrayList<>();
 
-        FileInputStream fis = new FileInputStream(FILE_PATH);
+        FileInputStream fis = new FileInputStream(file_path);
         Workbook workbook = new XSSFWorkbook(fis);
         Sheet sheet = workbook.getSheetAt(0);
 
