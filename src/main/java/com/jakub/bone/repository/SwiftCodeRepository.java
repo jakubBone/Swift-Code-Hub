@@ -6,6 +6,7 @@ import org.jooq.DSLContext;
 import java.sql.SQLException;
 import java.util.List;
 
+import static jooq.Tables.SWIFT_CODES;
 import static org.jooq.impl.DSL.*;
 
 public class SwiftCodeRepository {
@@ -28,5 +29,18 @@ public class SwiftCodeRepository {
                             code.getAddress(), code.getTown(), code.getCountry())
                     .execute();
         }
+    }
+
+    public SwiftCode findSwiftCode(String swift_code) {
+        return context.select(
+                        SWIFT_CODES.COUNTRY_ISO2,
+                        SWIFT_CODES.SWIFT_CODE,
+                        SWIFT_CODES.BANK_NAME,
+                        SWIFT_CODES.ADDRESS,
+                        SWIFT_CODES.TOWN,
+                        SWIFT_CODES.COUNTRY)
+                .from(SWIFT_CODES)
+                .where(SWIFT_CODES.SWIFT_CODE.eq(swift_code))
+                .fetchOneInto(SwiftCode.class);
     }
 }

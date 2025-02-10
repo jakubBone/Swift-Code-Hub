@@ -1,4 +1,4 @@
-import com.jakub.bone.database.Database;
+import com.jakub.bone.database.Datasource;
 
 import com.jakub.bone.utills.ExcelImporter;
 import com.jakub.bone.domain.SwiftCode;
@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws SQLException, IOException {
-        Database database = new Database();
+        Datasource database = new Datasource();
         List<SwiftCode> swiftCodes = ExcelImporter.getExcelFile();
         database.getCodeRepository().insertSwiftCodes(swiftCodes);
     }

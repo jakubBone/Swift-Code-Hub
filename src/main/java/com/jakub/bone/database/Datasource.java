@@ -14,7 +14,7 @@ import org.jooq.impl.DSL;
 
 @Log4j2
 @Getter
-public class Database {
+public class Datasource {
     private final String database = ConfigLoader.get("database.name");
     private final String username = ConfigLoader.get("database.username");
     private final String password = ConfigLoader.get("database.password");
@@ -24,7 +24,7 @@ public class Database {
     private final SwiftCodeRepository codeRepository;
     private Connection connection;
 
-    public Database() throws SQLException {
+    public Datasource() throws SQLException {
         this.connection = getDatabaseConnection();
         this.context = DSL.using(connection);
         this.databaseSchema = new DatabaseSchema(context);

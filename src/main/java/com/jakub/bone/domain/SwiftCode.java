@@ -10,6 +10,7 @@ public class SwiftCode {
     private String address;
     private String town;
     private String country;
+    private boolean isHeadquarter;
 
     public SwiftCode(String countryIso2, String swiftCode, String bankName,
                      String address, String town, String country) {
@@ -19,5 +20,6 @@ public class SwiftCode {
         this.address = address;
         this.town = town;
         this.country = country;
+        this.isHeadquarter = swiftCode.endsWith("XXX");
     }
 }
