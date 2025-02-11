@@ -1,6 +1,6 @@
 package com.jakub.bone.repository;
 
-import com.jakub.bone.domain.SwiftCode;
+import com.jakub.bone.domain.SwiftRecord;
 import org.jooq.DSLContext;
 
 import java.sql.SQLException;
@@ -16,8 +16,8 @@ public class SwiftCodeRepository {
         this.context = context;
     }
 
-    public void insertSwiftCodes(List<SwiftCode> swiftCodes) throws SQLException {
-        for (SwiftCode code : swiftCodes) {
+    public void insertSwiftRecords(List<SwiftRecord> swiftCodesRecords) throws SQLException {
+        for (SwiftRecord code : swiftCodesRecords) {
             context.insertInto(table("swift_codes"),
                             field("country_iso2"),
                             field("swift_code"),
@@ -31,7 +31,7 @@ public class SwiftCodeRepository {
         }
     }
 
-    public SwiftCode findSwiftCode(String swift_code) {
+    public SwiftRecord findSwiftRecordBySwiftCode(String swift_code) {
         return context.select(
                         SWIFT_CODES.COUNTRY_ISO2,
                         SWIFT_CODES.SWIFT_CODE,
@@ -41,11 +41,23 @@ public class SwiftCodeRepository {
                         SWIFT_CODES.COUNTRY)
                 .from(SWIFT_CODES)
                 .where(SWIFT_CODES.SWIFT_CODE.eq(swift_code))
-                .fetchOneInto(SwiftCode.class);
+                .fetchOneInto(SwiftRecord.class);
     }
 
+    public List<SwiftRecord> findAllSwiftRecordsByCountryIso2(String countryIso2) {
+        return context.select(
+                        SWIFT_CODES.COUNTRY_ISO2,
+                        SWIFT_CODES.SWIFT_CODE,
+                        SWIFT_CODES.BANK_NAME,
+                        SWIFT_CODES.ADDRESS,
+                        SWIFT_CODES.TOWN,
+                        SWIFT_CODES.COUNTRY)
+                .from(SWIFT_CODES)
+                .where(SWIFT_CODES.COUNTRY_ISO2.eq(countryIso2))
+                .fetchInto(SwiftRecord.class);
+    }
 
-    public List<SwiftCode> findBranchesByHeadquarter(String headquarterSwiftCode) {
+    public List<SwiftRecord> findAllBranchesRecordsByHeadquarter(String headquarterSwiftCode) {
         String prefix = headquarterSwiftCode.substring(0, 8);
         return context.select(
                         SWIFT_CODES.COUNTRY_ISO2,
@@ -57,6 +69,16 @@ public class SwiftCodeRepository {
                 .from(SWIFT_CODES)
                 .where(SWIFT_CODES.SWIFT_CODE.like(prefix + "%"))
                 .and(SWIFT_CODES.SWIFT_CODE.ne(headquarterSwiftCode))
-                .fetchInto(SwiftCode.class);
+                .fetchInto(SwiftRecord.class);
     }
+
+    public String findCountryByCountryISO2(String countryIso2) {
+        return context.select(SWIFT_CODES.COUNTRY)
+                .from(SWIFT_CODES)
+                .where(SWIFT_CODES.COUNTRY_ISO2.eq(countryIso2))
+                .limit(1)
+                .fetchOneInto(String.class);
+    }
+
+
 }

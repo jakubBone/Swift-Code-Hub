@@ -18,7 +18,8 @@ public class ApiServer {
         context.setAttribute("database", database);
 
         // Init Servlet
-        context.addServlet(new ServletHolder(new SwiftCodeServlet()), "/v1/swift-codes/*");
+        context.addServlet(new ServletHolder(new SwiftCodeDetailsServlet()), "/v1/swift-codes/*");
+        context.addServlet(new ServletHolder(new CountrySwiftCodeServlet()), "/v1/swift-codes/country/*");
 
         try {
             server.start();

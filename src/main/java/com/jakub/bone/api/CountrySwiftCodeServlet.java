@@ -2,10 +2,11 @@ package com.jakub.bone.api;
 
 import com.google.gson.Gson;
 import com.jakub.bone.database.Datasource;
-import com.jakub.bone.domain.SwiftCode;
-import com.jakub.bone.utills.SwiftCodeMapper;
+import com.jakub.bone.domain.SwiftRecord;
+import com.jakub.bone.utills.SwiftMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,8 +15,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(urlPatterns = "/v1/swift-codes/*")
-public class SwiftCodeServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/v1/swift-codes/country/*")
+public class CountrySwiftCodeServlet extends HttpServlet {
     private Datasource database;
 
     @Override
@@ -26,18 +27,13 @@ public class SwiftCodeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String path = request.getPathInfo();
-            String code = path.substring(1);
-            SwiftCode swiftCode = database.getCodeRepository().findSwiftCode(code);
-            if (swiftCode == null) {
+            String countryISO2 = request.getPathInfo().substring(1);
+            String countryName = database.getCodeRepository().findCountryByCountryISO2(countryISO2);
+            List<SwiftRecord> swiftRecords = database.getCodeRepository().findAllSwiftRecordsByCountryIso2(countryISO2);
+            if (swiftRecords == null) {
                 send(response, Map.of("message", "record not found"));
             } else {
-                if(swiftCode.isHeadquarter()){
-                    List<SwiftCode> branches = database.getCodeRepository().findBranchesByHeadquarter(swiftCode.getSwiftCode());
-                    send(response, SwiftCodeMapper.mapHeadquarterSwiftCode(swiftCode, branches));
-                } else {
-                    send(response, SwiftCodeMapper.mapSingleBranchSwiftCode(swiftCode));
-                }
+                send(response, SwiftMapper.mapSwiftCodesForCountry(countryISO2, countryName, swiftRecords));
             }
         } catch (Exception ex){
             send(response, Map.of("error", "Internal server error"));
