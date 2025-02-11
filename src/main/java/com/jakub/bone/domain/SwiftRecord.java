@@ -1,8 +1,10 @@
 package com.jakub.bone.domain;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class SwiftRecord {
     private String countryIso2;
     private String swiftCode;

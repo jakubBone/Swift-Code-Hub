@@ -2,6 +2,7 @@ package com.jakub.bone.repository;
 
 import com.jakub.bone.domain.SwiftRecord;
 import org.jooq.DSLContext;
+import org.jooq.exception.DataAccessException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -80,5 +81,24 @@ public class SwiftCodeRepository {
                 .fetchOneInto(String.class);
     }
 
+    public void addSwiftRecord(SwiftRecord swiftRecord) {
 
+        try {
+            context.insertInto(SWIFT_CODES,
+                            SWIFT_CODES.ADDRESS,
+                            SWIFT_CODES.BANK_NAME,
+                            SWIFT_CODES.COUNTRY_ISO2,
+                            SWIFT_CODES.COUNTRY,
+                            SWIFT_CODES.SWIFT_CODE)
+                    .values(
+                            swiftRecord.getAddress(),
+                            swiftRecord.getBankName(),
+                            swiftRecord.getCountryIso2(),
+                            swiftRecord.getCountry(),
+                            swiftRecord.getSwiftCode())
+                    .execute();
+        } catch (DataAccessException ex) {
+            System.err.println("Failed to ass new SWIFT Record: " + ex.getMessage());
+        }
+    }
 }

@@ -17,26 +17,26 @@ import java.util.Map;
 
 @WebServlet(urlPatterns = "/v1/swift-codes/country/*")
 public class CountrySwiftCodeServlet extends HttpServlet {
-    private Datasource database;
+    private Datasource datasource;
 
     @Override
     public void init() throws ServletException {
-        this.database = (Datasource) getServletContext().getAttribute("database");
+        this.datasource = (Datasource) getServletContext().getAttribute("database");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String countryISO2 = request.getPathInfo().substring(1);
-            String countryName = database.getCodeRepository().findCountryByCountryISO2(countryISO2);
-            List<SwiftRecord> swiftRecords = database.getCodeRepository().findAllSwiftRecordsByCountryIso2(countryISO2);
+            String countryName = datasource.getCodeRepository().findCountryByCountryISO2(countryISO2);
+            List<SwiftRecord> swiftRecords = datasource.getCodeRepository().findAllSwiftRecordsByCountryIso2(countryISO2);
             if (swiftRecords == null) {
                 send(response, Map.of("message", "record not found"));
             } else {
                 send(response, SwiftMapper.mapSwiftCodesForCountry(countryISO2, countryName, swiftRecords));
             }
         } catch (Exception ex){
-            send(response, Map.of("error", "Internal server error"));
+            send(response, Map.of("message", "internal server error"));
             System.err.println("Error handling request: " + ex.getMessage());
         }
     }

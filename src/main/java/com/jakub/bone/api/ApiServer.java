@@ -14,12 +14,13 @@ public class ApiServer {
         ServletContextHandler context = new ServletContextHandler();
         server.setHandler(context);
 
-        Datasource database = new Datasource();
-        context.setAttribute("database", database);
+        Datasource datasource = new Datasource();
+        context.setAttribute("datasource", datasource);
 
         // Init Servlet
         context.addServlet(new ServletHolder(new SwiftCodeDetailsServlet()), "/v1/swift-codes/*");
         context.addServlet(new ServletHolder(new CountrySwiftCodeServlet()), "/v1/swift-codes/country/*");
+        context.addServlet(new ServletHolder(new SwiftCodeCreationServlet()), "/v1/swift-codes");
 
         try {
             server.start();

@@ -16,11 +16,11 @@ import java.util.Map;
 
 @WebServlet(urlPatterns = "/v1/swift-codes/*")
 public class SwiftCodeDetailsServlet extends HttpServlet {
-    private Datasource database;
+    private Datasource datasource;
 
     @Override
     public void init() throws ServletException {
-        this.database = (Datasource) getServletContext().getAttribute("database");
+        this.datasource = (Datasource) getServletContext().getAttribute("database");
     }
 
     @Override
@@ -28,19 +28,19 @@ public class SwiftCodeDetailsServlet extends HttpServlet {
         try {
             String path = request.getPathInfo();
             String swiftCode = path.substring(1);
-            SwiftRecord swiftRecord = database.getCodeRepository().findSwiftRecordBySwiftCode(swiftCode);
+            SwiftRecord swiftRecord = datasource.getCodeRepository().findSwiftRecordBySwiftCode(swiftCode);
             if (swiftRecord == null) {
-                send(response, Map.of("message", "record not found"));
+                send(response, Map.of("message", "SWIFT Record not found"));
             } else {
                 if(swiftRecord.isHeadquarter()){
-                    List<SwiftRecord> branches = database.getCodeRepository().findAllBranchesRecordsByHeadquarter(swiftRecord.getSwiftCode());
+                    List<SwiftRecord> branches = datasource.getCodeRepository().findAllBranchesRecordsByHeadquarter(swiftRecord.getSwiftCode());
                     send(response, SwiftMapper.mapHeadquarterSwiftRecord(swiftRecord, branches));
                 } else {
                     send(response, SwiftMapper.mapSingleBranchSwiftRecord(swiftRecord));
                 }
             }
         } catch (Exception ex){
-            send(response, Map.of("error", "Internal server error"));
+            send(response, Map.of("message", "internal server error"));
             System.err.println("Error handling request: " + ex.getMessage());
         }
     }

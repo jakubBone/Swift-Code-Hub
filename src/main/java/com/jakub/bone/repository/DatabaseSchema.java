@@ -1,6 +1,7 @@
 package com.jakub.bone.repository;
 
 import org.jooq.DSLContext;
+import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 
