@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @WebServlet(urlPatterns = "/v1/swift-codes/*")
@@ -31,7 +32,12 @@ public class SwiftCodeServlet extends HttpServlet {
             if (swiftCode == null) {
                 send(response, Map.of("message", "record not found"));
             } else {
-                send(response, SwiftCodeMapper.mapBranchSwiftCode(swiftCode));
+                if(swiftCode.isHeadquarter()){
+                    List<SwiftCode> branches = database.getCodeRepository().findBranchesByHeadquarter(swiftCode.getSwiftCode());
+                    send(response, SwiftCodeMapper.mapHeadquarterSwiftCode(swiftCode, branches));
+                } else {
+                    send(response, SwiftCodeMapper.mapSingleBranchSwiftCode(swiftCode));
+                }
             }
         } catch (Exception ex){
             send(response, Map.of("error", "Internal server error"));

@@ -43,4 +43,20 @@ public class SwiftCodeRepository {
                 .where(SWIFT_CODES.SWIFT_CODE.eq(swift_code))
                 .fetchOneInto(SwiftCode.class);
     }
+
+
+    public List<SwiftCode> findBranchesByHeadquarter(String headquarterSwiftCode) {
+        String prefix = headquarterSwiftCode.substring(0, 8);
+        return context.select(
+                        SWIFT_CODES.COUNTRY_ISO2,
+                        SWIFT_CODES.SWIFT_CODE,
+                        SWIFT_CODES.BANK_NAME,
+                        SWIFT_CODES.ADDRESS,
+                        SWIFT_CODES.TOWN,
+                        SWIFT_CODES.COUNTRY)
+                .from(SWIFT_CODES)
+                .where(SWIFT_CODES.SWIFT_CODE.like(prefix + "%"))
+                .and(SWIFT_CODES.SWIFT_CODE.ne(headquarterSwiftCode))
+                .fetchInto(SwiftCode.class);
+    }
 }
