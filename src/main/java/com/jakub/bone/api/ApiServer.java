@@ -1,12 +1,14 @@
 package com.jakub.bone.api;
 
 import com.jakub.bone.database.Datasource;
+import lombok.extern.log4j.Log4j2;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 import java.sql.SQLException;
 
+@Log4j2
 public class ApiServer {
     public static void main(String[] args) throws SQLException {
         Server server = new Server(8080);
@@ -24,20 +26,20 @@ public class ApiServer {
 
         try {
             server.start();
-            System.out.println("Server is running on http://localhost:8080");
+            log.info("Server is running on http://localhost:8080");
             try {
                 server.join();
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
-                System.err.println("API Server interrupted: " + ex.getMessage());
+                log.error("API Server interrupted", ex);
             }
         } catch (Exception ex) {
-            System.err.println("Failed to start API Server: " + ex.getMessage());
+            log.error("Failed to to start API Server. Error: {}", ex.getMessage(), ex);
         } finally {
             try {
                 server.stop();
-            } catch (Exception e) {
-                System.err.println("Failed to stop API Server: " + e.getMessage());
+            } catch (Exception ex) {
+                log.error("Failed to stop API Server. Error: {}", ex.getMessage(), ex);
             }
         }
     }

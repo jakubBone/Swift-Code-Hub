@@ -3,22 +3,27 @@ package com.jakub.bone.api;
 import com.google.gson.Gson;
 import com.jakub.bone.database.Datasource;
 import com.jakub.bone.domain.SwiftRecord;
+import com.jakub.bone.service.SwiftCodeService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.util.Map;
 
 @WebServlet(urlPatterns = "/v1/swift-codes")
+@Log4j2
 public class SwiftCodeCreateServlet extends HttpServlet {
     private Datasource datasource;
+    private SwiftCodeService service;
 
     @Override
     public void init() throws ServletException {
         this.datasource = (Datasource) getServletContext().getAttribute("database");
+        this.service = new SwiftCodeService(datasource.getCodeRepository());
     }
 
     // Endpoint 3: Add a new SWIFT code record
@@ -29,55 +34,19 @@ public class SwiftCodeCreateServlet extends HttpServlet {
 
         try {
             SwiftRecord newRecord = gson.fromJson(request.getReader(), SwiftRecord.class);
-
-            if (newRecord == null) {
-                send(response, Map.of("message", "Invalid input: Request body is empty"));
+            if (newRecord == null || newRecord.getSwiftCode() == null || newRecord.getSwiftCode().isEmpty()) {
+                log.warn("POST: Invalid input - Right SWIFT code is required");
+                service.send(response, Map.of("message", "Invalid input: Request body is empty"));
                 return;
             }
 
-            if (isNullOrEmpty(newRecord.getSwiftCode())) {
-                send(response, Map.of("message", "Invalid input: SWIFT code is required"));
-                return;
-            }
-            if (isNullOrEmpty(newRecord.getCountryIso2())) {
-                send(response, Map.of("message", "Invalid input: CountryISO2 is required"));
-                return;
-            }
-            if (isNullOrEmpty(newRecord.getCountry())) {
-                send(response, Map.of("message", "Invalid input: Country is required"));
-                return;
-            }
-            if (isNullOrEmpty(newRecord.getBankName())) {
-                send(response, Map.of("message", "Invalid input: Bank name is required"));
-                return;
-            }
-            if (isNullOrEmpty(newRecord.getAddress())) {
-                send(response, Map.of("message", "Invalid input: Address is required"));
-                return;
-            }
+            service.addSwiftRecord(newRecord);
+            log.info("POST: Added new SWIFT Record with code: {}", newRecord.getSwiftCode());
 
-            newRecord.setCountryIso2(newRecord.getCountryIso2().toUpperCase());
-            newRecord.setCountry(newRecord.getCountry().toUpperCase());
-
-            datasource.getCodeRepository().addSwiftRecord(newRecord);
-            send(response, Map.of("message", "SWIFT Record added successfully"));
+            service.send(response, Map.of("message", "SWIFT Record added successfully"));
         } catch (Exception ex) {
-            send(response, Map.of("message", "Internal server error"));
-            System.err.println("Error handling POST request: " + ex.getMessage());
+            log.error("POST: Error while processing request", ex);
+            service.send(response, Map.of("message", "Internal server error"));
         }
-    }
-
-    // Helper method to send JSON responses
-    public void send(HttpServletResponse response, Object message) throws IOException {
-        Gson gson = new Gson();
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        String jsonMessage = gson.toJson(message);
-        response.getWriter().write(jsonMessage);
-    }
-
-    // Helper method to input validation
-    private boolean isNullOrEmpty(String s) {
-        return s == null || s.trim().isEmpty();
     }
 }
