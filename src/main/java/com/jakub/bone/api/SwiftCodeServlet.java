@@ -31,7 +31,7 @@ public class SwiftCodeServlet extends HttpServlet {
             String swiftCode = path.substring(1);
             SwiftRecord swiftRecord = datasource.getCodeRepository().findSwiftRecordBySwiftCode(swiftCode);
             if (swiftRecord == null) {
-                send(response, Map.of("message", "SWIFT Record not found"));
+                send(response, Map.of("message", "Invalid input: SWIFT Record not found"));
             } else {
                 if(swiftRecord.isHeadquarter()){
                     List<SwiftRecord> branches = datasource.getCodeRepository().findAllBranchesRecordsByHeadquarter(swiftRecord.getSwiftCode());
@@ -41,8 +41,8 @@ public class SwiftCodeServlet extends HttpServlet {
                 }
             }
         } catch (Exception ex){
-            send(response, Map.of("message", "internal server error"));
-            System.err.println("Error handling request: " + ex.getMessage());
+            send(response, Map.of("message", "Internal server error"));
+            System.err.println("Error handling GET request: " + ex.getMessage());
         }
     }
 
@@ -52,17 +52,23 @@ public class SwiftCodeServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String path = request.getPathInfo();
+            if (path == null ) {
+                send(response, Map.of("message", "Invalid input: SWIFT code is required"));
+                return;
+            }
+
             String swiftCode = path.substring(1);
             SwiftRecord swiftRecord = datasource.getCodeRepository().findSwiftRecordBySwiftCode(swiftCode);
+
             if (swiftRecord == null) {
-                send(response, Map.of("message", "invalid input: SWIFT code not found"));
+                send(response, Map.of("message", "Invalid input: SWIFT code not found"));
             } else {
                 datasource.getCodeRepository().deleteSwiftRecord(swiftCode);
                 send(response, Map.of("message", "SWIFT Record deleted successfully"));
             }
         } catch (Exception ex){
-            send(response, Map.of("message", "internal server error"));
-            System.err.println("Error handling request: " + ex.getMessage());
+            send(response, Map.of("message", "Internal server error"));
+            System.err.println("Error handling DELETE request: " + ex.getMessage());
         }
     }
 

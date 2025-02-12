@@ -39,7 +39,7 @@ public class SwiftMapper {
         headquarterMap.put("countryISO2", swiftRecord.getCountryIso2());
         headquarterMap.put("countryName", swiftRecord.getCountry());
         headquarterMap.put("isHeadquarter", swiftRecord.isHeadquarter());
-        headquarterMap.put("swiftRecord", swiftRecord.getSwiftCode());
+        headquarterMap.put("swiftCode", swiftRecord.getSwiftCode());
 
         List<Map<String, Object>> mappedBranches = mapAllHeadquarterBranches(branches);
         headquarterMap.put("branches", mappedBranches);

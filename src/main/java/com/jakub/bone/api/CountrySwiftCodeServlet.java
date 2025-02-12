@@ -21,7 +21,7 @@ public class CountrySwiftCodeServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        this.datasource = (Datasource) getServletContext().getAttribute("database");
+        this.datasource = (Datasource) getServletContext().getAttribute("datasource");
     }
 
     // Endpoint 2: Retrieve all SWIFT Records for a specific country
@@ -33,13 +33,13 @@ public class CountrySwiftCodeServlet extends HttpServlet {
             String countryName = datasource.getCodeRepository().findCountryByCountryISO2(countryISO2);
             List<SwiftRecord> swiftRecords = datasource.getCodeRepository().findAllSwiftRecordsByCountryIso2(countryISO2);
             if (swiftRecords == null) {
-                send(response, Map.of("message", "record not found"));
+                send(response, Map.of("message", "Invalid input: SWIFT Record not found"));
             } else {
                 send(response, SwiftMapper.mapSwiftCodesForCountry(countryISO2, countryName, swiftRecords));
             }
         } catch (Exception ex){
-            send(response, Map.of("message", "internal server error"));
-            System.err.println("Error handling request: " + ex.getMessage());
+            send(response, Map.of("message", "Internal server error"));
+            System.err.println("Error handling GET request: " + ex.getMessage());
         }
     }
 

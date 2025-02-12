@@ -30,23 +30,40 @@ public class SwiftCodeCreateServlet extends HttpServlet {
         try {
             SwiftRecord newRecord = gson.fromJson(request.getReader(), SwiftRecord.class);
 
-            if(newRecord == null || newRecord.getSwiftCode() == null || newRecord.getSwiftCode().isEmpty()){
-                send(response, Map.of("message", "invalid input: SWIFT code is required"));
+            if (newRecord == null) {
+                send(response, Map.of("message", "Invalid input: Request body is empty"));
                 return;
             }
 
-            if(newRecord.getCountryIso2() != null){
-                newRecord.setCountryIso2(newRecord.getCountryIso2().toUpperCase());
+            if (isNullOrEmpty(newRecord.getSwiftCode())) {
+                send(response, Map.of("message", "Invalid input: SWIFT code is required"));
+                return;
             }
-            if(newRecord.getCountry() != null){
-                newRecord.setCountry(newRecord.getCountry().toUpperCase());
+            if (isNullOrEmpty(newRecord.getCountryIso2())) {
+                send(response, Map.of("message", "Invalid input: CountryISO2 is required"));
+                return;
             }
+            if (isNullOrEmpty(newRecord.getCountry())) {
+                send(response, Map.of("message", "Invalid input: Country is required"));
+                return;
+            }
+            if (isNullOrEmpty(newRecord.getBankName())) {
+                send(response, Map.of("message", "Invalid input: Bank name is required"));
+                return;
+            }
+            if (isNullOrEmpty(newRecord.getAddress())) {
+                send(response, Map.of("message", "Invalid input: Address is required"));
+                return;
+            }
+
+            newRecord.setCountryIso2(newRecord.getCountryIso2().toUpperCase());
+            newRecord.setCountry(newRecord.getCountry().toUpperCase());
 
             datasource.getCodeRepository().addSwiftRecord(newRecord);
             send(response, Map.of("message", "SWIFT Record added successfully"));
         } catch (Exception ex) {
-            send(response, Map.of("message", "failed to add SWIFT Record"));
-            System.err.println("Error handling request: " + ex.getMessage());
+            send(response, Map.of("message", "Internal server error"));
+            System.err.println("Error handling POST request: " + ex.getMessage());
         }
     }
 
@@ -57,5 +74,10 @@ public class SwiftCodeCreateServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         String jsonMessage = gson.toJson(message);
         response.getWriter().write(jsonMessage);
+    }
+
+    // Helper method to input validation
+    private boolean isNullOrEmpty(String s) {
+        return s == null || s.trim().isEmpty();
     }
 }
