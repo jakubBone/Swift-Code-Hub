@@ -6,18 +6,18 @@ import java.util.*;
 
 public class SwiftMapper {
 
-    public static Map<String, Object> mapSwiftCodesForCountry(String countryIso2, String countryName, List<SwiftRecord> swiftRecords) {
+    public static Map<String, Object> mapCountrySwiftRecords(String countryIso2, String countryName, List<SwiftRecord> swiftRecords) {
         Map<String, Object> headquarterMap = new LinkedHashMap<>();
         headquarterMap.put("countryISO2", countryIso2);
         headquarterMap.put("countryName", countryName);
 
-        List<Map<String, Object>> mappedRecords = mapAllSwiftRecordsForCountry(swiftRecords);
+        List<Map<String, Object>> mappedRecords = mapSwiftRecords(swiftRecords);
         headquarterMap.put("swiftCodes", mappedRecords);
 
         return headquarterMap;
     }
 
-    private static List<Map<String, Object>> mapAllSwiftRecordsForCountry(List<SwiftRecord> swiftRecords) {
+    private static List<Map<String, Object>> mapSwiftRecords(List<SwiftRecord> swiftRecords) {
         List<Map<String, Object>> list = new ArrayList<>();
 
         for (SwiftRecord branch : swiftRecords) {
@@ -32,22 +32,22 @@ public class SwiftMapper {
         return list;
     }
 
-    public static Map<String, Object> mapHeadquarterSwiftRecord(SwiftRecord swiftRecord, List<SwiftRecord> branches) {
+    public static Map<String, Object> mapHeadquarterSwiftRecordWithBranches(SwiftRecord hqSwiftRecord, List<SwiftRecord> branches) {
         Map<String, Object> headquarterMap = new LinkedHashMap<>();
-        headquarterMap.put("address", swiftRecord.getAddress());
-        headquarterMap.put("bankName", swiftRecord.getBankName());
-        headquarterMap.put("countryISO2", swiftRecord.getCountryIso2());
-        headquarterMap.put("countryName", swiftRecord.getCountry());
-        headquarterMap.put("isHeadquarter", swiftRecord.isHeadquarter());
-        headquarterMap.put("swiftCode", swiftRecord.getSwiftCode());
+        headquarterMap.put("address", hqSwiftRecord.getAddress());
+        headquarterMap.put("bankName", hqSwiftRecord.getBankName());
+        headquarterMap.put("countryISO2", hqSwiftRecord.getCountryIso2());
+        headquarterMap.put("countryName", hqSwiftRecord.getCountry());
+        headquarterMap.put("isHeadquarter", hqSwiftRecord.isHeadquarter());
+        headquarterMap.put("swiftCode", hqSwiftRecord.getSwiftCode());
 
-        List<Map<String, Object>> mappedBranches = mapAllHeadquarterBranches(branches);
+        List<Map<String, Object>> mappedBranches = mapBranchRecords(branches);
         headquarterMap.put("branches", mappedBranches);
 
         return headquarterMap;
     }
 
-    private static List<Map<String, Object>> mapAllHeadquarterBranches(List<SwiftRecord> branches) {
+    private static List<Map<String, Object>> mapBranchRecords(List<SwiftRecord> branches) {
         List<Map<String, Object>> branchList = new ArrayList<>();
 
         for (SwiftRecord branch: branches) {
@@ -62,14 +62,14 @@ public class SwiftMapper {
         return branchList;
     }
 
-    public static Map<String, Object> mapSingleBranchSwiftRecord(SwiftRecord swiftRecord) {
+    public static Map<String, Object> mapSingleBranchRecord(SwiftRecord branchRecord) {
         Map<String, Object> branchMap = new LinkedHashMap<>();
-        branchMap.put("address", swiftRecord.getAddress());
-        branchMap.put("bankName", swiftRecord.getBankName());
-        branchMap.put("countryISO2", swiftRecord.getCountryIso2());
-        branchMap.put("countryName", swiftRecord.getCountry());
-        branchMap.put("isHeadquarter", swiftRecord.isHeadquarter());
-        branchMap.put("swiftRecord", swiftRecord.getSwiftCode());
+        branchMap.put("address", branchRecord.getAddress());
+        branchMap.put("bankName", branchRecord.getBankName());
+        branchMap.put("countryISO2", branchRecord.getCountryIso2());
+        branchMap.put("countryName", branchRecord.getCountry());
+        branchMap.put("isHeadquarter", branchRecord.isHeadquarter());
+        branchMap.put("swiftCode", branchRecord.getSwiftCode());
 
         return branchMap;
     }

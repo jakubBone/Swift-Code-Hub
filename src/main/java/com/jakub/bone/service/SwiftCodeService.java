@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.jakub.bone.domain.SwiftRecord;
 import com.jakub.bone.repository.SwiftCodeRepository;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jooq.DSLContext;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,33 +16,39 @@ public class SwiftCodeService {
         this.repository = repository;
     }
 
-    public SwiftRecord findSwiftRecordBySwiftCode(String swiftCode) {
-        return repository.findSwiftRecordBySwiftCode(swiftCode);
+    public SwiftRecord findSwiftBySwiftCode(String swiftCode) {
+        return repository.findBySwiftCode(swiftCode);
     }
 
-    public List<SwiftRecord> findBranchesRecordsByHeadquarter(String headquarterSwiftCode) {
-        return repository.findAllBranchesRecordsByHeadquarter(headquarterSwiftCode);
+    public List<SwiftRecord> findAllBranchesByHeadquarter(String hqSwiftCode) {
+        return repository.findAllBranchesByHeadquarter(hqSwiftCode);
     }
 
-    public List<SwiftRecord> findAllSwiftRecordsByCountryIso2(String countryIso2) {
-        return repository.findAllSwiftRecordsByCountryIso2(countryIso2);
+    public List<SwiftRecord> findAllByCountryIso2(String countryIso2) {
+        return repository.findAllByCountryIso2(countryIso2);
     }
 
-    public String findCountryByCountryISO2(String countryIso2) {
-        return repository.findCountryByCountryISO2(countryIso2);
+    public String findByCountryISO2(String countryIso2) {
+        return repository.findCountryByISO2(countryIso2);
     }
 
-    public void addSwiftRecord(SwiftRecord swiftRecord) {
+    public void createSwiftRecord(SwiftRecord swiftRecord) {
         validateSwiftRecord(swiftRecord);
 
         swiftRecord.setCountryIso2(swiftRecord.getCountryIso2().toUpperCase());
         swiftRecord.setCountry(swiftRecord.getCountry().toUpperCase());
 
-        repository.addSwiftRecord(swiftRecord);
+        DSLContext context = repository.getContext();
+        context.transaction(configuration -> {
+            repository.createSwiftRecord(swiftRecord)
+        });
     }
 
     public void deleteSwiftRecord(String swiftCode) {
-        repository.deleteSwiftRecord(swiftCode);
+        DSLContext context = repository.getContext();
+        context.transaction(configuration -> {
+            repository.deleteSwiftRecord(swiftCode);
+        });
     }
 
     private void validateSwiftRecord(SwiftRecord swiftRecord) {

@@ -1,6 +1,5 @@
 package com.jakub.bone.api;
 
-import com.google.gson.Gson;
 import com.jakub.bone.database.Datasource;
 import com.jakub.bone.domain.SwiftRecord;
 import com.jakub.bone.service.SwiftCodeService;
@@ -20,7 +19,7 @@ import java.util.Map;
 @Log4j2
 public class SwiftCodeServlet extends HttpServlet {
     private Datasource datasource;
-    private SwiftCodeService service
+    private SwiftCodeService service;
     @Override
     public void init() throws ServletException {
         this.datasource = (Datasource) getServletContext().getAttribute("datasource");
@@ -35,7 +34,7 @@ public class SwiftCodeServlet extends HttpServlet {
             String path = request.getPathInfo();
             String swiftCode = path.substring(1);
 
-            SwiftRecord swiftRecord = service.findSwiftRecordBySwiftCode(swiftCode)
+            SwiftRecord swiftRecord = service.findSwiftBySwiftCode(swiftCode);
 
             if (swiftRecord == null) {
                 log.warn("GET: No SWIFT code provided in the path");
@@ -43,11 +42,11 @@ public class SwiftCodeServlet extends HttpServlet {
             } else {
                 if(swiftRecord.isHeadquarter()){
                     log.info("GET: Record is a headquarter");
-                    List<SwiftRecord> branches = service.findBranchesRecordsByHeadquarter(swiftRecord.getSwiftCode())
-                    service.send(response, SwiftMapper.mapHeadquarterSwiftRecord(swiftRecord, branches));
+                    List<SwiftRecord> branches = service.findAllBranchesByHeadquarter(swiftRecord.getSwiftCode());
+                    service.send(response, SwiftMapper.mapHeadquarterSwiftRecordWithBranches(swiftRecord, branches));
                 } else {
                     log.info("GET: Record is a branch");
-                    service.send(response, SwiftMapper.mapSingleBranchSwiftRecord(swiftRecord));
+                    service.send(response, SwiftMapper.mapSingleBranchRecord(swiftRecord));
                 }
             }
         } catch (Exception ex){
@@ -69,7 +68,7 @@ public class SwiftCodeServlet extends HttpServlet {
             }
 
             String swiftCode = path.substring(1);
-            SwiftRecord swiftRecord = service.findSwiftRecordBySwiftCode(swiftCode);
+            SwiftRecord swiftRecord = service.findSwiftBySwiftCode(swiftCode);
             if (swiftRecord == null) {
                 log.warn("DELETE: SWIFT Record not found for code: {}", swiftCode);
                 service.send(response, Map.of("message", "Invalid input: SWIFT code not found"));

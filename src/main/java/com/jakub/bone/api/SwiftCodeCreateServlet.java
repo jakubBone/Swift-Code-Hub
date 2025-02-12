@@ -22,7 +22,7 @@ public class SwiftCodeCreateServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        this.datasource = (Datasource) getServletContext().getAttribute("database");
+        this.datasource = (Datasource) getServletContext().getAttribute("datasource");
         this.service = new SwiftCodeService(datasource.getCodeRepository());
     }
 
@@ -31,7 +31,6 @@ public class SwiftCodeCreateServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Gson gson = new Gson();
-
         try {
             SwiftRecord newRecord = gson.fromJson(request.getReader(), SwiftRecord.class);
             if (newRecord == null || newRecord.getSwiftCode() == null || newRecord.getSwiftCode().isEmpty()) {
@@ -40,7 +39,7 @@ public class SwiftCodeCreateServlet extends HttpServlet {
                 return;
             }
 
-            service.addSwiftRecord(newRecord);
+            service.createSwiftRecord(newRecord);
             log.info("POST: Added new SWIFT Record with code: {}", newRecord.getSwiftCode());
 
             service.send(response, Map.of("message", "SWIFT Record added successfully"));

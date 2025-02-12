@@ -1,6 +1,5 @@
 package com.jakub.bone.api;
 
-import com.google.gson.Gson;
 import com.jakub.bone.database.Datasource;
 import com.jakub.bone.domain.SwiftRecord;
 import com.jakub.bone.service.SwiftCodeService;
@@ -35,16 +34,16 @@ public class CountrySwiftCodeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String countryISO2 = request.getPathInfo().substring(1);
-            String countryName = service.findCountryByCountryISO2(countryISO2);
+            String countryName = service.findByCountryISO2(countryISO2);
             log.info("GET: Retrieving Records for country ISO2: {}", countryISO2);
 
-            List<SwiftRecord> swiftRecords = service.findAllSwiftRecordsByCountryIso2(countryISO2)
+            List<SwiftRecord> swiftRecords = service.findAllByCountryIso2(countryISO2);
             if (swiftRecords == null || swiftRecords.isEmpty()) {
                 log.warn("GET: No SWIFT Records found for country ISO2: {}", countryISO2);
                 service.send(response, Map.of("message", "Invalid input: SWIFT Record not found"));
             } else {
                 log.info("GET: Found {} SWIFT Records for country ISO2: {}", swiftRecords.size(), countryISO2);
-                service.send(response, SwiftMapper.mapSwiftCodesForCountry(countryISO2, countryName, swiftRecords));
+                service.send(response, SwiftMapper.mapCountrySwiftRecords(countryISO2, countryName, swiftRecords));
             }
         } catch (Exception ex){
             log.error("GET: Error while processing request", ex);
