@@ -1,3 +1,5 @@
+package unit_tests;
+
 import com.jakub.bone.domain.SwiftRecord;
 import com.jakub.bone.utills.SwiftMapper;
 
@@ -10,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SwiftMapperTest {
     @Test
-    @DisplayName("Should test country swift records mapping correctness")
+    @DisplayName("Should test country SWIFT Records mapping correctness")
     void testMapCountrySwiftRecords(){
-        SwiftRecord record1 = new SwiftRecord("PL", "ABCDEF111", "Bank1", "Address1", "Town1", "POLAND");
-        SwiftRecord record2 = new SwiftRecord("PL", "ABCDEF222", "Bank2", "Address2", "Town2", "POLAND");
+        SwiftRecord record1 = new SwiftRecord("PL", "ABCDEF111", "Bank1", "Address1", "POLAND");
+        SwiftRecord record2 = new SwiftRecord("PL", "ABCDEF222", "Bank2", "Address2", "POLAND");
         List<SwiftRecord> swiftRecords =  List.of(record1, record2);
 
         Map<String, Object> testMap = SwiftMapper.mapCountrySwiftRecords("PL", "POLAND", swiftRecords);
@@ -29,11 +31,11 @@ class SwiftMapperTest {
     }
 
     @Test
-    @DisplayName("Should test headquarter swift record mapping correctness")
+    @DisplayName("Should test headquarter SWIFT Record mapping correctness")
     void testMapHeadquarterSwiftRecordWithBranches(){
-        SwiftRecord hqRecord = new SwiftRecord("PL", "ABCDEFXXX", "Bank1", "Address1", "Town1", "POLAND");
-        SwiftRecord branchRecord1 = new SwiftRecord("PL", "ABCDEF111", "Bank2", "Address2", "Town2", "POLAND");
-        SwiftRecord branchRecord2 = new SwiftRecord("PL", "ABCDEF222", "Bank3", "Address3", "Town3", "POLAND");
+        SwiftRecord hqRecord = new SwiftRecord("PL", "ABCDEFXXX", "Bank1", "Address1", "POLAND");
+        SwiftRecord branchRecord1 = new SwiftRecord("PL", "ABCDEF111", "Bank2", "Address2", "POLAND");
+        SwiftRecord branchRecord2 = new SwiftRecord("PL", "ABCDEF222", "Bank3", "Address3", "POLAND");
         List<SwiftRecord> branchRecords =  List.of(branchRecord1, branchRecord2);
 
         Map<String, Object> testMap = SwiftMapper.mapHeadquarterSwiftRecordWithBranches(hqRecord,branchRecords);
@@ -51,9 +53,9 @@ class SwiftMapperTest {
     }
 
     @Test
-    @DisplayName("Should test single branch record mapping correctness")
+    @DisplayName("Should test single SWIFT branch Record mapping correctness")
     void testMapSingleBranchRecord(){
-        SwiftRecord branchRecord = new SwiftRecord("PL", "ABCDEF111", "Bank1", "Address1", "Town1", "POLAND");
+        SwiftRecord branchRecord = new SwiftRecord("PL", "ABCDEF111", "Bank1", "Address1", "POLAND");
         Map<String, Object> testMap = SwiftMapper.mapSingleBranchRecord(branchRecord);
 
         assertEquals("Address1", testMap.get("address"));

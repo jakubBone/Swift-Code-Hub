@@ -19,14 +19,14 @@ public class DatabaseSchema {
                 .column("swift_code", SQLDataType.VARCHAR)
                 .column("bank_name", SQLDataType.VARCHAR)
                 .column("address", SQLDataType.VARCHAR)
-                .column("town", SQLDataType.VARCHAR)
                 .column("country", SQLDataType.VARCHAR)
                 .constraints(
                         DSL.constraint("PK_SWING_CODES").primaryKey("id"))
                 .execute();
     }
 
+
     public void clearTables(){
-        context.truncate("swing_codes").restartIdentity().execute();
+        context.truncate("swift_codes").restartIdentity().execute();
     }
 }

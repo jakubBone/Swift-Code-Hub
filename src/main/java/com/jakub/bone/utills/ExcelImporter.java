@@ -31,11 +31,10 @@ public class ExcelImporter {
                 String swiftCode = getCellValue(row.getCell(1));
                 String bankName = getCellValue(row.getCell(3));
                 String address = getCellValue(row.getCell(4));
-                String town = getCellValue(row.getCell(5));
                 String country = getCellValue(row.getCell(6));
 
                 swiftCodes.add(new SwiftRecord(countryIso2, swiftCode, bankName,
-                        address, town, country));
+                        address, country));
             }
         } catch(IOException ex){
             log.error("Failed to import file. Error: {}", ex.getMessage(), ex);

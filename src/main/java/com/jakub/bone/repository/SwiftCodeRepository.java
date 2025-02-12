@@ -29,10 +29,9 @@ public class SwiftCodeRepository {
                                 field("swift_code"),
                                 field("bank_name"),
                                 field("address"),
-                                field("town"),
                                 field("country"))
                         .values(code.getCountryIso2(), code.getSwiftCode(), code.getBankName(),
-                                code.getAddress(), code.getTown(), code.getCountry())
+                                code.getAddress(), code.getCountry())
                         .execute();
             }
         } catch (org.jooq.exception.IntegrityConstraintViolationException ex) {
@@ -46,7 +45,6 @@ public class SwiftCodeRepository {
                         SWIFT_CODES.SWIFT_CODE,
                         SWIFT_CODES.BANK_NAME,
                         SWIFT_CODES.ADDRESS,
-                        SWIFT_CODES.TOWN,
                         SWIFT_CODES.COUNTRY)
                 .from(SWIFT_CODES)
                 .where(SWIFT_CODES.SWIFT_CODE.eq(swiftCode))
@@ -59,7 +57,6 @@ public class SwiftCodeRepository {
                         SWIFT_CODES.SWIFT_CODE,
                         SWIFT_CODES.BANK_NAME,
                         SWIFT_CODES.ADDRESS,
-                        SWIFT_CODES.TOWN,
                         SWIFT_CODES.COUNTRY)
                 .from(SWIFT_CODES)
                 .where(SWIFT_CODES.COUNTRY_ISO2.eq(countryIso2))
@@ -81,7 +78,6 @@ public class SwiftCodeRepository {
                         SWIFT_CODES.SWIFT_CODE,
                         SWIFT_CODES.BANK_NAME,
                         SWIFT_CODES.ADDRESS,
-                        SWIFT_CODES.TOWN,
                         SWIFT_CODES.COUNTRY)
                 .from(SWIFT_CODES)
                 .where(SWIFT_CODES.SWIFT_CODE.like(prefix + "%"))
@@ -89,7 +85,7 @@ public class SwiftCodeRepository {
                 .fetchInto(SwiftRecord.class);
     }
 
-    public void createSwiftRecord(SwiftRecord swiftRecord) {
+   public void createSwiftRecord(SwiftRecord swiftRecord) {
         try {
             context.insertInto(SWIFT_CODES,
                             SWIFT_CODES.ADDRESS,
