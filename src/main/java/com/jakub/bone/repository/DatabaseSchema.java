@@ -1,7 +1,6 @@
 package com.jakub.bone.repository;
 
 import org.jooq.DSLContext;
-import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 
@@ -14,7 +13,7 @@ public class DatabaseSchema {
     }
 
     public void createTable() {
-        context.createTableIfNotExists("swing_codes")
+        context.createTableIfNotExists("swift_codes")
                 .column("id", SQLDataType.INTEGER.identity(true))
                 .column("country_iso2", SQLDataType.VARCHAR)
                 .column("swift_code", SQLDataType.VARCHAR)

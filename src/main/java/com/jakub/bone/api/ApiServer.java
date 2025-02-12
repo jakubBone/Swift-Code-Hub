@@ -18,9 +18,9 @@ public class ApiServer {
         context.setAttribute("datasource", datasource);
 
         // Init Servlet
-        context.addServlet(new ServletHolder(new SwiftCodeDetailsServlet()), "/v1/swift-codes/*");
+        context.addServlet(new ServletHolder(new SwiftCodeServlet()), "/v1/swift-codes/*");
         context.addServlet(new ServletHolder(new CountrySwiftCodeServlet()), "/v1/swift-codes/country/*");
-        context.addServlet(new ServletHolder(new SwiftCodeCreationServlet()), "/v1/swift-codes");
+        context.addServlet(new ServletHolder(new SwiftCodeCreateServlet()), "/v1/swift-codes");
 
         try {
             server.start();

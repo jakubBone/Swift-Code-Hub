@@ -58,6 +58,14 @@ public class SwiftCodeRepository {
                 .fetchInto(SwiftRecord.class);
     }
 
+    public String findCountryByCountryISO2(String countryIso2) {
+        return context.select(SWIFT_CODES.COUNTRY)
+                .from(SWIFT_CODES)
+                .where(SWIFT_CODES.COUNTRY_ISO2.eq(countryIso2))
+                .limit(1)
+                .fetchOneInto(String.class);
+    }
+
     public List<SwiftRecord> findAllBranchesRecordsByHeadquarter(String headquarterSwiftCode) {
         String prefix = headquarterSwiftCode.substring(0, 8);
         return context.select(
@@ -73,16 +81,7 @@ public class SwiftCodeRepository {
                 .fetchInto(SwiftRecord.class);
     }
 
-    public String findCountryByCountryISO2(String countryIso2) {
-        return context.select(SWIFT_CODES.COUNTRY)
-                .from(SWIFT_CODES)
-                .where(SWIFT_CODES.COUNTRY_ISO2.eq(countryIso2))
-                .limit(1)
-                .fetchOneInto(String.class);
-    }
-
     public void addSwiftRecord(SwiftRecord swiftRecord) {
-
         try {
             context.insertInto(SWIFT_CODES,
                             SWIFT_CODES.ADDRESS,
@@ -98,7 +97,17 @@ public class SwiftCodeRepository {
                             swiftRecord.getSwiftCode())
                     .execute();
         } catch (DataAccessException ex) {
-            System.err.println("Failed to ass new SWIFT Record: " + ex.getMessage());
+            System.err.println("Failed to add new SWIFT Record: " + ex.getMessage());
+        }
+    }
+
+    public void deleteSwiftRecord(String swiftCode) {
+        try {
+            context.deleteFrom(SWIFT_CODES)
+                    .where(SWIFT_CODES.SWIFT_CODE.eq(swiftCode))
+                    .execute();
+        } catch (DataAccessException ex) {
+            System.err.println("Failed to delete SWIFT Record: " + ex.getMessage());
         }
     }
 }

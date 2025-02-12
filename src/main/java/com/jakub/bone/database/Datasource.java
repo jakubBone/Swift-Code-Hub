@@ -29,7 +29,6 @@ public class Datasource {
         this.context = DSL.using(connection);
         this.databaseSchema = new DatabaseSchema(context);
         this.codeRepository = new SwiftCodeRepository(context);
-
     }
 
     public Connection getDatabaseConnection() throws SQLException {

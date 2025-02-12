@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.jakub.bone.database.Datasource;
 import com.jakub.bone.domain.SwiftRecord;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,7 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
-public class SwiftCodeCreationServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/v1/swift-codes")
+public class SwiftCodeCreateServlet extends HttpServlet {
     private Datasource datasource;
 
     @Override
@@ -19,6 +21,8 @@ public class SwiftCodeCreationServlet extends HttpServlet {
         this.datasource = (Datasource) getServletContext().getAttribute("database");
     }
 
+    // Endpoint 3: Add a new SWIFT code record
+    // POST: /v1/swift-codes
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Gson gson = new Gson();
@@ -46,7 +50,7 @@ public class SwiftCodeCreationServlet extends HttpServlet {
         }
     }
 
-    // Helper method for sending serialized data
+    // Helper method to send JSON responses
     public void send(HttpServletResponse response, Object message) throws IOException {
         Gson gson = new Gson();
         response.setContentType("application/json");

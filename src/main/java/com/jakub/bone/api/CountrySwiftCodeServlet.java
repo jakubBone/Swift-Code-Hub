@@ -24,6 +24,8 @@ public class CountrySwiftCodeServlet extends HttpServlet {
         this.datasource = (Datasource) getServletContext().getAttribute("database");
     }
 
+    // Endpoint 2: Retrieve all SWIFT Records for a specific country
+    // GET: /v1/swift-codes/country/{countryISO2code}
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
@@ -41,7 +43,7 @@ public class CountrySwiftCodeServlet extends HttpServlet {
         }
     }
 
-    // Helper method for sending serialized data
+    // Helper method to send JSON responses
     public void send(HttpServletResponse response, Object message) throws IOException {
         Gson gson = new Gson();
         response.setContentType("application/json");

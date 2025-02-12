@@ -15,14 +15,15 @@ import java.util.List;
 import java.util.Map;
 
 @WebServlet(urlPatterns = "/v1/swift-codes/*")
-public class SwiftCodeDetailsServlet extends HttpServlet {
+public class SwiftCodeServlet extends HttpServlet {
     private Datasource datasource;
-
     @Override
     public void init() throws ServletException {
-        this.datasource = (Datasource) getServletContext().getAttribute("database");
+        this.datasource = (Datasource) getServletContext().getAttribute("datasource");
     }
 
+    // Endpoint 1: Retrieve details of a SWIFT Record
+    // GET: /v1/swift-codes/{swift-code}
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
@@ -45,7 +46,27 @@ public class SwiftCodeDetailsServlet extends HttpServlet {
         }
     }
 
-    // Helper method for sending serialized data
+    // Endpoint 4: Delete a SWIFT code record
+    // DELETE: /v1/swift-codes/{swift-code}
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            String path = request.getPathInfo();
+            String swiftCode = path.substring(1);
+            SwiftRecord swiftRecord = datasource.getCodeRepository().findSwiftRecordBySwiftCode(swiftCode);
+            if (swiftRecord == null) {
+                send(response, Map.of("message", "invalid input: SWIFT code not found"));
+            } else {
+                datasource.getCodeRepository().deleteSwiftRecord(swiftCode);
+                send(response, Map.of("message", "SWIFT Record deleted successfully"));
+            }
+        } catch (Exception ex){
+            send(response, Map.of("message", "internal server error"));
+            System.err.println("Error handling request: " + ex.getMessage());
+        }
+    }
+
+    // Helper method to send JSON responses
     public void send(HttpServletResponse response, Object message) throws IOException {
         Gson gson = new Gson();
         response.setContentType("application/json");
