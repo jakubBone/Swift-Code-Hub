@@ -40,7 +40,7 @@ public class SwiftCodeService {
 
         DSLContext context = repository.getContext();
         context.transaction(configuration -> {
-            repository.createSwiftRecord(swiftRecord)
+            repository.createSwiftRecord(swiftRecord);
         });
     }
 
