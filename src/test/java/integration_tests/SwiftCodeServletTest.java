@@ -14,8 +14,7 @@ import org.junit.jupiter.api.*;
 
 import java.sql.SQLException;
 
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class SwiftCodeServletTest {
@@ -74,25 +73,84 @@ class SwiftCodeServletTest {
     }
 
     @Test
-    @DisplayName("Should test SWIFT Record GET by SWIFT code")
-    void testGetRecordBySwiftCode() {
+    @DisplayName("Should test SWIFT Headquarter Record GET by SWIFT code")
+    void testGetHeadquarterBySwiftCode() {
         waitForUpdate();
-
-        SwiftRecord record = new SwiftRecord("PL", "ABCDEFXXX", "Bank1", "Address1", "POLAND");
-        datasource.getCodeRepository().createSwiftRecord(record);
+        SwiftRecord hqRecord = new SwiftRecord("PL", "ABCDEFGHXXX", "Bank1", "Address1", "POLAND");
+        SwiftRecord branchRecord = new SwiftRecord("PL", "ABCDEFGH123", "Bank1", "Address1", "POLAND");
+        datasource.getCodeRepository().createSwiftRecord(hqRecord);
+        datasource.getCodeRepository().createSwiftRecord(branchRecord);
 
         // GET: /v1/swift-codes/{swift-code}
         RestAssured.baseURI = "http://localhost:8080";
-        Response response = RestAssured.get("/v1/swift-codes/ABCDEFXXX");
+        Response response = RestAssured.get("/v1/swift-codes/ABCDEFGHXXX");
 
-        response.then().assertThat().statusCode(200);
-        response.then().assertThat().body("countryISO2", equalTo("PL"));
-        response.then().assertThat().body("swiftCode", equalTo("ABCDEFXXX"));
-        response.then().assertThat().body("bankName", equalTo("Bank1"));
-        response.then().assertThat().body("address", equalTo("Address1"));
-        response.then().assertThat().body("countryName", equalTo("POLAND"));
-        response.then().assertThat().body("swiftCode", not(equalTo("INCORRECT_CODE")));
+        response.then().assertThat()
+                .statusCode(200)
+                .body("countryISO2", equalTo("PL"))
+                .body("swiftCode", equalTo("ABCDEFGHXXX"))
+                .body("bankName", equalTo("Bank1"))
+                .body("address", equalTo("Address1"))
+                .body("countryName", equalTo("POLAND"))
+                .body("isHeadquarter", equalTo(true))
+                .body("swiftCode", not(equalTo("INCORRECT_CODE")))
+                .body("branches[0].address", equalTo("Address1"))
+                .body("branches[0].bankName", equalTo("Bank1"))
+                .body("branches[0].countryISO2", equalTo("PL"))
+                .body("branches[0].isHeadquarter", equalTo(false))
+                .body("branches[0].swiftCode", equalTo("ABCDEFGH123"));
     }
+
+    @Test
+    @DisplayName("Should test SWIFT Branch Record GET by SWIFT code")
+    void testGetBranchBySwiftCode() {
+        waitForUpdate();
+        SwiftRecord branchRecord = new SwiftRecord("PL", "ABCDEFGH123", "Bank1", "Address1", "POLAND");
+        datasource.getCodeRepository().createSwiftRecord(branchRecord);
+
+        // GET: /v1/swift-codes/{swift-code}
+        RestAssured.baseURI = "http://localhost:8080";
+        Response response = RestAssured.get("/v1/swift-codes/ABCDEFGH123");
+
+        response.then().assertThat()
+                .statusCode(200)
+                .body("address", equalTo("Address1"))
+                .body("bankName", equalTo("Bank1"))
+                .body("countryISO2", equalTo("PL"))
+                .body("countryName", equalTo("POLAND"))
+                .body("isHeadquarter", equalTo(false))
+                .body("swiftCode", equalTo("ABCDEFGH123"));
+    }
+
+    @Test
+    @DisplayName("Should test SWIFT Records GET by countryISO2")
+    void testGetRecordsByCountryISO2() {
+        waitForUpdate();
+        SwiftRecord record1 = new SwiftRecord("PL", "ABCDEFXXX", "Bank1", "Address1", "POLAND");
+        SwiftRecord record2 = new SwiftRecord("PL", "ABCDEF111", "Bank2", "Address2", "POLAND");
+
+        datasource.getCodeRepository().createSwiftRecord(record1);
+        datasource.getCodeRepository().createSwiftRecord(record2);
+
+        // GET: /v1/swift-codes/country/{countryISO2code}
+        RestAssured.baseURI = "http://localhost:8080";
+        Response response = RestAssured.get("/v1/swift-codes/country/PL");
+
+        response.then().assertThat()
+                .statusCode(200)
+                .body("countryISO2", equalTo("PL"))
+                .body("countryName", equalTo("POLAND"))
+                .body("swiftCodes", hasSize(2))
+                .body("swiftCodes[0].swiftCode", equalTo("ABCDEFXXX"))
+                .body("swiftCodes[0].bankName", equalTo("Bank1"))
+                .body("swiftCodes[0].address", equalTo("Address1"))
+                .body("swiftCodes[0].isHeadquarter", equalTo(true))
+                .body("swiftCodes[1].swiftCode", equalTo("ABCDEF111"))
+                .body("swiftCodes[1].bankName", equalTo("Bank2"))
+                .body("swiftCodes[1].address", equalTo("Address2"))
+                .body("swiftCodes[1].isHeadquarter", equalTo(false));
+    }
+
 
     @Test
     @DisplayName("Should test SWIFT Record DELETE by SWIFT code")
@@ -108,8 +166,9 @@ class SwiftCodeServletTest {
 
         SwiftRecord result = datasource.getCodeRepository().findBySwiftCode("ABCDEFXXX");
 
-        response.then().assertThat().statusCode(200);
-        response.then().assertThat().body("message", equalTo("SWIFT Record deleted successfully"));
+        response.then().assertThat()
+                .statusCode(200)
+                .body("message", equalTo("SWIFT Record deleted successfully"));
         assertNull(result);
     }
 }
