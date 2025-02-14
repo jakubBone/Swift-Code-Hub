@@ -10,16 +10,16 @@ public class SwiftRecord {
     private String swiftCode;
     private String bankName;
     private String address;
-    private String country;
+    private String countryName;
     private boolean isHeadquarter;
 
     public SwiftRecord(String countryIso2, String swiftCode, String bankName,
-                       String address, String country) {
+                       String address, String countryName) {
         this.countryIso2 = countryIso2;
         this.swiftCode = swiftCode;
         this.bankName = bankName;
         this.address = address;
-        this.country = country;
+        this.countryName = countryName;
         this.isHeadquarter = swiftCode.endsWith("XXX");
     }
 

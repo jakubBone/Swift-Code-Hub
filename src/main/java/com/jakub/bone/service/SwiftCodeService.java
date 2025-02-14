@@ -36,7 +36,7 @@ public class SwiftCodeService {
         validateSwiftRecord(swiftRecord);
 
         swiftRecord.setCountryIso2(swiftRecord.getCountryIso2().toUpperCase());
-        swiftRecord.setCountry(swiftRecord.getCountry().toUpperCase());
+        swiftRecord.setCountryName(swiftRecord.getCountryName().toUpperCase());
 
         DSLContext context = repository.getContext();
         context.transaction(configuration -> {
@@ -61,7 +61,7 @@ public class SwiftCodeService {
         if (isNullOrEmpty(swiftRecord.getCountryIso2())) {
             throw new IllegalArgumentException("Country ISO2 is required");
         }
-        if (isNullOrEmpty(swiftRecord.getCountry())) {
+        if (isNullOrEmpty(swiftRecord.getCountryName())) {
             throw new IllegalArgumentException("Country is required");
         }
         if (isNullOrEmpty(swiftRecord.getBankName())) {

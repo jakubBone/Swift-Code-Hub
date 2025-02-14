@@ -34,17 +34,20 @@ public class SwiftCodeCreateServlet extends HttpServlet {
         try {
             SwiftRecord newRecord = gson.fromJson(request.getReader(), SwiftRecord.class);
             if (newRecord == null || newRecord.getSwiftCode() == null || newRecord.getSwiftCode().isEmpty()) {
-                log.warn("POST: Invalid input - Right SWIFT code is required");
-                service.send(response, Map.of("message", "Invalid input: Request body is empty"));
+                log.warn("POST: Invalid input - Correct data format is required");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                service.send(response, Map.of("message", "Invalid input: Correct data format is required"));
                 return;
             }
 
             service.createSwiftRecord(newRecord);
-            log.info("POST: Added new SWIFT Record with code: {}", newRecord.getSwiftCode());
 
+            log.info("POST: Added new SWIFT Record with code: {}", newRecord.getSwiftCode());
+            response.setStatus(HttpServletResponse.SC_OK);
             service.send(response, Map.of("message", "SWIFT Record added successfully"));
         } catch (Exception ex) {
             log.error("POST: Error while processing request", ex);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             service.send(response, Map.of("message", "Internal server error"));
         }
     }

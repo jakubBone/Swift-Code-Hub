@@ -40,13 +40,16 @@ public class CountrySwiftCodeServlet extends HttpServlet {
             List<SwiftRecord> swiftRecords = service.findAllByCountryIso2(countryISO2);
             if (swiftRecords == null || swiftRecords.isEmpty()) {
                 log.warn("GET: No SWIFT Records found for country ISO2: {}", countryISO2);
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 service.send(response, Map.of("message", "Invalid input: SWIFT Record not found"));
             } else {
                 log.info("GET: Found {} SWIFT Records for country ISO2: {}", swiftRecords.size(), countryISO2);
+                response.setStatus(HttpServletResponse.SC_OK);
                 service.send(response, SwiftMapper.mapCountrySwiftRecords(countryISO2, countryName, swiftRecords));
             }
         } catch (Exception ex){
             log.error("GET: Error while processing request", ex);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             service.send(response, Map.of("message", "Internal server error"));
         }
     }

@@ -38,19 +38,23 @@ public class SwiftCodeServlet extends HttpServlet {
 
             if (swiftRecord == null) {
                 log.warn("GET: No SWIFT code provided in the path");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 service.send(response, Map.of("message", "Invalid input: SWIFT Record not found"));
             } else {
                 if(swiftRecord.isHeadquarter()){
                     log.info("GET: Record is a headquarter");
+                    response.setStatus(HttpServletResponse.SC_OK);
                     List<SwiftRecord> branches = service.findAllBranchesByHeadquarter(swiftRecord.getSwiftCode());
                     service.send(response, SwiftMapper.mapHeadquarterSwiftRecordWithBranches(swiftRecord, branches));
                 } else {
                     log.info("GET: Record is a branch");
-                    service.send(response, SwiftMapper.mapSingleBranchRecord(swiftRecord));
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    service.send(response, SwiftMapper.mapIndependentBranchRecord(swiftRecord));
                 }
             }
         } catch (Exception ex){
             log.error("GET: Error while processing the request", ex);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             service.send(response, Map.of("message", "Internal server error"));
         }
     }
@@ -61,8 +65,9 @@ public class SwiftCodeServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String path = request.getPathInfo();
-            if (path == null ) {
+            if (path == null) {
                 log.warn("DELETE: No SWIFT code provided in the path");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 service.send(response, Map.of("message", "Invalid input: SWIFT code is required"));
                 return;
             }
@@ -71,16 +76,18 @@ public class SwiftCodeServlet extends HttpServlet {
             SwiftRecord swiftRecord = service.findSwiftBySwiftCode(swiftCode);
             if (swiftRecord == null) {
                 log.warn("DELETE: SWIFT Record not found for code: {}", swiftCode);
-                service.send(response, Map.of("message", "Invalid input: SWIFT code not found"));
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                service.send(response, Map.of("message", "Invalid input: SWIFT Record not found"));
             } else {
                 service.deleteSwiftRecord(swiftCode);
                 log.info("DELETE: Successfully deleted SWIFT record for code: {}", swiftCode);
+                response.setStatus(HttpServletResponse.SC_OK);
                 service.send(response, Map.of("message", "SWIFT Record deleted successfully"));
             }
         } catch (Exception ex){
             log.error("DELETE: Error while processing the request", ex);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             service.send(response, Map.of("message", "Internal server error"));
-            System.err.println("Error handling DELETE request: " + ex.getMessage());
         }
     }
 }

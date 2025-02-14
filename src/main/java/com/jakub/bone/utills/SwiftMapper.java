@@ -37,17 +37,17 @@ public class SwiftMapper {
         headquarterMap.put("address", hqSwiftRecord.getAddress());
         headquarterMap.put("bankName", hqSwiftRecord.getBankName());
         headquarterMap.put("countryISO2", hqSwiftRecord.getCountryIso2());
-        headquarterMap.put("countryName", hqSwiftRecord.getCountry());
+        headquarterMap.put("countryName", hqSwiftRecord.getCountryName());
         headquarterMap.put("isHeadquarter", hqSwiftRecord.isHeadquarter());
         headquarterMap.put("swiftCode", hqSwiftRecord.getSwiftCode());
 
-        List<Map<String, Object>> mappedBranches = mapBranchRecords(branches);
+        List<Map<String, Object>> mappedBranches = mapHqBranchRecords(branches);
         headquarterMap.put("branches", mappedBranches);
 
         return headquarterMap;
     }
 
-    private static List<Map<String, Object>> mapBranchRecords(List<SwiftRecord> branches) {
+    private static List<Map<String, Object>> mapHqBranchRecords(List<SwiftRecord> branches) {
         List<Map<String, Object>> branchList = new ArrayList<>();
 
         for (SwiftRecord branch: branches) {
@@ -62,12 +62,12 @@ public class SwiftMapper {
         return branchList;
     }
 
-    public static Map<String, Object> mapSingleBranchRecord(SwiftRecord branchRecord) {
+    public static Map<String, Object> mapIndependentBranchRecord(SwiftRecord branchRecord) {
         Map<String, Object> branchMap = new LinkedHashMap<>();
         branchMap.put("address", branchRecord.getAddress());
         branchMap.put("bankName", branchRecord.getBankName());
-        branchMap.put("countryISO2", branchRecord.getCountryIso2());
-        branchMap.put("countryName", branchRecord.getCountry());
+        branchMap.put("countryIso2", branchRecord.getCountryIso2());
+        branchMap.put("countryName", branchRecord.getCountryName());
         branchMap.put("isHeadquarter", branchRecord.isHeadquarter());
         branchMap.put("swiftCode", branchRecord.getSwiftCode());
 

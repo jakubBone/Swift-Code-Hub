@@ -33,7 +33,7 @@ public class SwiftCodeRepository {
                                 field("address"),
                                 field("country"))
                         .values(code.getCountryIso2(), code.getSwiftCode(), code.getBankName(),
-                                code.getAddress(), code.getCountry())
+                                code.getAddress(), code.getCountryName())
                         .execute();
             }
         } catch (org.jooq.exception.IntegrityConstraintViolationException ex) {
@@ -103,7 +103,7 @@ public class SwiftCodeRepository {
                             swiftRecord.getAddress(),
                             swiftRecord.getBankName(),
                             swiftRecord.getCountryIso2(),
-                            swiftRecord.getCountry(),
+                            swiftRecord.getCountryName(),
                             swiftRecord.getSwiftCode())
                     .execute();
         } catch (DataAccessException ex) {

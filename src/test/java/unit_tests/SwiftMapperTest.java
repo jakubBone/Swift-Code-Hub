@@ -56,7 +56,7 @@ class SwiftMapperTest {
     @DisplayName("Should test single SWIFT branch Record mapping correctness")
     void testMapSingleBranchRecord(){
         SwiftRecord branchRecord = new SwiftRecord("PL", "ABCDEF111", "Bank1", "Address1", "POLAND");
-        Map<String, Object> testMap = SwiftMapper.mapSingleBranchRecord(branchRecord);
+        Map<String, Object> testMap = SwiftMapper.mapIndependentBranchRecord(branchRecord);
 
         assertEquals("Address1", testMap.get("address"));
         assertEquals("Bank1", testMap.get("bankName"));
