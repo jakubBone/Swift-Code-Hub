@@ -136,7 +136,7 @@ class SwiftCodeServletTest {
                 .statusCode(200)
                 .body("address", equalTo("Address1"))
                 .body("bankName", equalTo("Bank1"))
-                .body("countryISO2", equalTo("PL"))
+                .body("countryIso2", equalTo("PL"))
                 .body("countryName", equalTo("POLAND"))
                 .body("isHeadquarter", equalTo(false))
                 .body("swiftCode", equalTo("ABCDEFGH123"));

@@ -1,0 +1,35 @@
+services:
+  database:
+    image: postgres:15
+    container_name: swift_db
+    restart: always
+    environment:
+      POSTGRES_DB: swift_db
+      POSTGRES_USER: swift_user
+      POSTGRES_PASSWORD: swift123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "swift_user", "-d", "swift_codes" ]
+      interval: 5s
+      retries: 5
+      timeout: 3s
+
+  api:
+    build: .
+    container_name: swift_api
+    restart: always
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: jdbc:postgresql://database:5432/swift_db
+      DATABASE_USER: swift_user
+      DATABASE_PASSWORD: swift123
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:

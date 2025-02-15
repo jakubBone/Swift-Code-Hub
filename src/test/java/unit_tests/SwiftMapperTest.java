@@ -60,7 +60,7 @@ class SwiftMapperTest {
 
         assertEquals("Address1", testMap.get("address"));
         assertEquals("Bank1", testMap.get("bankName"));
-        assertEquals("PL", testMap.get("countryISO2"));
+        assertEquals("PL", testMap.get("countryIso2"));
         assertEquals("POLAND", testMap.get("countryName"));
         assertEquals("ABCDEF111", testMap.get("swiftCode"));
         assertEquals(false, testMap.get("isHeadquarter"));
