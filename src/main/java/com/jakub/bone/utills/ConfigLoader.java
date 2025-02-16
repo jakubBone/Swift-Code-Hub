@@ -24,6 +24,12 @@ public class ConfigLoader {
     }
 
     public static String get(String key) {
+        // Przykładowo, dla klucza "database.url" sprawdzamy, czy istnieje zmienna środowiskowa "DATABASE_URL"
+        String envKey = key.toUpperCase().replace('.', '_'); // "database.url" -> "DATABASE_URL"
+        String envValue = System.getenv(envKey);
+        if (envValue != null && !envValue.isBlank()) {
+            return envValue;
+        }
         return properties.getProperty(key);
     }
 }

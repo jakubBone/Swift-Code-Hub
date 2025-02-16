@@ -15,10 +15,11 @@ import org.jooq.impl.DSL;
 @Log4j2
 @Getter
 public class Datasource {
+    private final String url = ConfigLoader.get("database.url");
     private final String database = ConfigLoader.get("database.name");
     private final String username = ConfigLoader.get("database.username");
     private final String password = ConfigLoader.get("database.password");
-    private final String url = String.format("jdbc:postgresql://localhost:%d/%s", 5432, database);
+
     private final DSLContext context;
     private final DatabaseSchema databaseSchema;
     private final SwiftCodeRepository codeRepository;
@@ -35,6 +36,17 @@ public class Datasource {
         if (connection != null && !connection.isClosed()) {
             return connection;
         }
+
+        try {
+            // Opóźnienie o 5 sekund przed próbą nawiązania połączenia
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            // Przywracamy status przerwania wątku i logujemy błąd
+            Thread.currentThread().interrupt();
+            log.error("Wątek został przerwany podczas oczekiwania", e);
+        }
+
+
         try {
             this.connection = DriverManager.getConnection(url, username, password);
             log.info("Connection established successfully with database '{}' on port {}", database, 5432);
