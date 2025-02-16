@@ -37,15 +37,13 @@ public class Datasource {
             return connection;
         }
 
+        // 5 seconds delay before trying to connect
         try {
-            // Opóźnienie o 5 sekund przed próbą nawiązania połączenia
             Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            // Przywracamy status przerwania wątku i logujemy błąd
+        } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
-            log.error("Wątek został przerwany podczas oczekiwania", e);
+            log.error("Thread was interrupted while waiting", ex);
         }
-
 
         try {
             this.connection = DriverManager.getConnection(url, username, password);

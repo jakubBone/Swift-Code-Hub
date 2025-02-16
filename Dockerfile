@@ -1,15 +1,15 @@
-# Używamy obrazu Javy z OpenJDK 17
+# Image for Java21
 FROM eclipse-temurin:21-jdk
 
-# Ustawienie katalogu roboczego
+# Working directory setting
 WORKDIR /app
 
-# Kopiowanie pliku JAR z katalogu build/libs/
+# Copy JAR
 COPY build/libs/RemitlySwiftHub.jar RemitlySwiftHub.jar
 
-# Eksponowanie portu aplikacji
+# Application port
 EXPOSE 8080
 
-# Uruchomienie aplikacji
+# Run the application
 CMD ["java", "-jar", "RemitlySwiftHub.jar"]
 
