@@ -2,14 +2,13 @@
 
 [![Watch the video](src/main/resources/images/logo.png)](https://www.youtube.com/watch?v=eqqYM1RD8ZI)
 
-Remitly Swift Hub is a containerized Java application that parses SWIFT code data from an Excel file, 
-stores the data in a PostgreSQL database, and exposes a REST API to manage SWIFT records. 
-The application was developed as a solution focused on making SWIFT (Bank Identifier)data easily accessible to other systems.
-
+Remitly Swift Hub is a containerized Java application that parses SWIFT code data from an .xlsx file, 
+stores the data in a PostgreSQL database, and exposes a REST API to manage SWIFT records.
+The application was developed to make SWIFT (Bank Identifier) data easily accessible to other systems.
 
 ## 🎯 Key Features
 
-- **SWIFT Data Parsing**: Reads and processes an Excel file containing SWIFT code information
+- **SWIFT Data Parsing**: Reads and processes an .xlsx file containing SWIFT code information
 
 - **Database Storage**: Uses PostgreSQL to persist parsed SWIFT data for low-latency querying
 
@@ -103,7 +102,7 @@ The application is fully containerized using Docker.
 A sample docker-compose.yml is provided to orchestrate both the API and the PostgreSQL database
 
 1. **Configure the Environment**   
-   Edit the `config.properties` if needed to update database credentials and file paths for the SWIFT Excel file
+   Edit the `config.properties` if needed to update database credentials and file paths for the SWIFT .xlsx file
 
 2. **Run Docker Compose**   
    From the project root, run:
@@ -151,6 +150,19 @@ The system provides a REST API. Available endpoints
       "swiftCode": "ABCDEFGH123"
     }
   ]
+}
+```
+<br>
+
+🔹 **Response Example (Branch SWIFT Code):** 
+```json
+{
+   "address": "Branch address",
+   "bankName": "Bank Name",
+   "countryISO2": "PL",
+   "countryName": "POLAND",
+   "isHeadquarter": "false",
+   "swiftCode": "ABCDEFGH123"
 }
 ```
 <br>
@@ -227,7 +239,7 @@ This application was developed with the following goals:
   
 - **Efficient Data Storage**: Store SWIFT data in a database optimized for fast retrieval
 
-- **RESTful API Exposure**: Provide endpoints for querying, adding, and deleting SWIFT records
+- **RESTful API**: Provide endpoints for querying, adding, and deleting SWIFT records
 
 - **Containerization:**: Deploy the application and database using Docker to ensure a consistent runtime environment
 
