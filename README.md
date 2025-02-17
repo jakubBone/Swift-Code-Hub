@@ -123,12 +123,10 @@ A sample docker-compose.yml is provided to orchestrate both the API and the Post
    
 ## 🌐 API Overview
 
-The system provides a REST API.
-
-### Available endpoints
+The system provides a REST API. Available endpoints
 
 - `GET /v1/swift-codes/{swift-code}` – Retrieve SWIFT Code Details
-- `GET /v1/swift-codes/country/{countryISO2}` – Retrieve SWIFT Codes by Country
+- `GET /v1/swift-codes/country/{countryISO2}` – Retrieve SWIFT Codes by CountryISO2 code
 - `POST /v1/swift-codes` – Add a New SWIFT Code Record
 - `DELETE /v1/swift-codes/{swift-code}` – Delete a SWIFT Code Record
 
