@@ -1,7 +1,6 @@
 package integration_tests;
 
 import com.jakub.bone.api.CountrySwiftCodeServlet;
-import com.jakub.bone.api.SwiftCodeCreateServlet;
 import com.jakub.bone.api.SwiftCodeServlet;
 import com.jakub.bone.database.Datasource;
 import com.jakub.bone.domain.SwiftRecord;
@@ -14,7 +13,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.jupiter.api.*;
 
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.*;
@@ -45,7 +43,6 @@ class SwiftCodeServletTest {
             // Init Servlet
             context.addServlet(new ServletHolder(new SwiftCodeServlet()), "/v1/swift-codes/*");
             context.addServlet(new ServletHolder(new CountrySwiftCodeServlet()), "/v1/swift-codes/country/*");
-            context.addServlet(new ServletHolder(new SwiftCodeCreateServlet()), "/v1/swift-codes");
 
             try {
                 server.start();
@@ -70,15 +67,29 @@ class SwiftCodeServletTest {
     // Helper method to wait for the server to start
     private void waitForUpdate() {
         try {
-            Thread.sleep(4000);
+            Thread.sleep(10000);
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
     }
 
     @Test
+    @DisplayName("Should test GET SWIFT Record by SWIFT code with with missing SWIFT code")
+    void testGetRecordBySwiftCodeWithMissingSwiftCode() {
+        waitForUpdate();
+
+        // GET: /v1/swift-codes
+        RestAssured.baseURI = "http://localhost:8080";
+        Response response = RestAssured.get("/v1/swift-codes");
+
+        response.then().assertThat()
+                .statusCode(400)
+                .body("message",  equalTo("Invalid input: Empty request. SWIFT code is required"));
+    }
+
+    @Test
     @DisplayName("Should test GET SWIFT Headquarter Record by SWIFT code with correct input")
-    void testGetHeadquarterBySwiftCodeCorrectInput() {
+    void testGetHeadquarterBySwiftCodeWithCorrectInput() {
         waitForUpdate();
 
         SwiftRecord hqRecord = new SwiftRecord("PL", "ABCDEFGHXXX", "Bank1", "Address1", "POLAND");
@@ -108,9 +119,9 @@ class SwiftCodeServletTest {
 
     @Test
     @DisplayName("Should test GET SWIFT Headquarter Record by SWIFT code with incorrect input")
-    void testGetHeadquarterBySwiftCodeIncorrectInput() {
+    void testGetHeadquarterBySwiftCodeWithIncorrectInput() {
         waitForUpdate();
-        String incorrectSwiftCode =  "UNAVAILABLE";
+        String incorrectSwiftCode =  "INCORRECT";
 
         // GET: /v1/swift-codes/{swift-code}
         RestAssured.baseURI = "http://localhost:8080";
@@ -123,7 +134,7 @@ class SwiftCodeServletTest {
 
     @Test
     @DisplayName("Should test GET SWIFT Branch Record by SWIFT code with correct input")
-    void testGetBranchBySwiftCodeCorrectInput() {
+    void testGetBranchBySwiftCodeWithCorrectInput() {
         waitForUpdate();
         SwiftRecord branchRecord = new SwiftRecord("PL", "ABCDEFGH123", "Bank1", "Address1", "POLAND");
         datasource.getCodeRepository().createSwiftRecord(branchRecord);
@@ -144,9 +155,9 @@ class SwiftCodeServletTest {
 
     @Test
     @DisplayName("Should test GET SWIFT Branch Record by SWIFT code with incorrect input")
-    void testGetBranchBySwiftCodeIncorrectInput() {
+    void testGetBranchBySwiftCodeWithIncorrectInput() {
         waitForUpdate();
-        String incorrectSwiftCode =  "UNAVAILABLE";
+        String incorrectSwiftCode =  "INCORRECT";
 
         // GET: /v1/swift-codes/{swift-code}
         RestAssured.baseURI = "http://localhost:8080";
@@ -158,8 +169,22 @@ class SwiftCodeServletTest {
     }
 
     @Test
+    @DisplayName("Should test GET SWIFT Records by countryISO2 with missing countryISO2")
+    void testGetRecordsByCountryISO2WithMissingCountryISO2() {
+        waitForUpdate();
+
+        // GET: /v1/swift-codes/country
+        RestAssured.baseURI = "http://localhost:8080";
+        Response response = RestAssured.get("/v1/swift-codes/country");
+
+        response.then().assertThat()
+                .statusCode(400)
+                .body("message",  equalTo("Invalid input: Empty request. CountryISO2 code is required"));
+    }
+
+    @Test
     @DisplayName("Should test GET SWIFT Records by countryISO2 with correct input")
-    void testGetRecordsByCountryISO2CorrectInput() {
+    void testGetRecordsByCountryISO2WithCorrectInput() {
         waitForUpdate();
         SwiftRecord record1 = new SwiftRecord("PL", "ABCDEFXXX", "Bank1", "Address1", "POLAND");
         SwiftRecord record2 = new SwiftRecord("PL", "ABCDEF111", "Bank2", "Address2", "POLAND");
@@ -188,9 +213,9 @@ class SwiftCodeServletTest {
 
     @Test
     @DisplayName("Should test GET SWIFT Records by countryISO2 with incorrect input")
-    void testGetRecordsByCountryISO2IncorrectInput() {
+    void testGetRecordsByCountryISO2WithIncorrectInput() {
         waitForUpdate();
-        String incorrectCountryISO2 = "UNAVAILABLE";
+        String incorrectCountryISO2 = "INCORRECT";
 
         // GET: /v1/swift-codes/country/{countryISO2code}
         RestAssured.baseURI = "http://localhost:8080";
@@ -201,10 +226,23 @@ class SwiftCodeServletTest {
                 .body("message",  equalTo("Invalid input: SWIFT Record not found"));
     }
 
+    @Test
+    @DisplayName("Should test SWIFT Record DELETE by SWIFT code with with missing SWIFT code")
+    void testDeleteRecordBySwiftCodeWithMissingSwiftCode() {
+        waitForUpdate();
+
+        // DELETE: /v1/swift-codes
+        RestAssured.baseURI = "http://localhost:8080";
+        Response response = RestAssured.get("/v1/swift-codes");
+
+        response.then().assertThat()
+                .statusCode(400)
+                .body("message",  equalTo("Invalid input: Empty request. SWIFT code is required"));
+    }
 
     @Test
     @DisplayName("Should test SWIFT Record DELETE by SWIFT code with correct input")
-    void testDeleteRecordBySwiftCodeCorrectInput() {
+    void testDeleteRecordBySwiftCodeWithCorrectInput() {
         waitForUpdate();
 
         SwiftRecord record = new SwiftRecord("PL", "ABCDEFXXX", "Bank1", "Address1", "POLAND");
@@ -224,9 +262,9 @@ class SwiftCodeServletTest {
 
     @Test
     @DisplayName("Should test SWIFT Record DELETE by SWIFT code with incorrect input")
-    void testDeleteRecordBySwiftCodeIncorrectInput() {
+    void testDeleteRecordBySwiftCodeWithIncorrectInput() {
         waitForUpdate();
-        String incorrectSwiftCode =  "UNAVAILABLE";
+        String incorrectSwiftCode =  "INCORRECT";
 
         // DELETE: /v1/swift-codes/{swift-code}
         RestAssured.baseURI = "http://localhost:8080";
@@ -241,7 +279,7 @@ class SwiftCodeServletTest {
 
     @Test
     @DisplayName("Should test SWIFT Record POST with correct input")
-    void testPostRecordCorrectInput() {
+    void testPostRecordWithCorrectInput() {
         waitForUpdate();
 
         SwiftRecord hqRecord = new SwiftRecord("PL", "ABCDEFGHXXX", "Bank1", "Address1", "POLAND");
@@ -265,8 +303,8 @@ class SwiftCodeServletTest {
     }
 
     @Test
-    @DisplayName("Should test SWIFT Record POST with correct input")
-    void testPostRecordIncorrectInput() {
+    @DisplayName("Should test SWIFT Record POST with incorrect input")
+    void testPostRecordWithIncorrectInput() {
         waitForUpdate();
 
         Map<String, Object> invalidBody = Map.of(

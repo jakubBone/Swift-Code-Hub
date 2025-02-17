@@ -33,6 +33,15 @@ public class CountrySwiftCodeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+            String path = request.getPathInfo();
+
+            if (path == null) {
+                log.warn("GET: Empty Invalid input: Empty CountryISO2 request");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                service.send(response, Map.of("message", "Invalid input: Empty request. CountryISO2 code is required"));
+                return;
+            }
+
             String countryISO2 = request.getPathInfo().substring(1);
             String countryName = service.findByCountryISO2(countryISO2);
             log.info("GET: Retrieving Records for country ISO2: {}", countryISO2);

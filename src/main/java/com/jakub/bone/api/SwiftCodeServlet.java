@@ -1,5 +1,6 @@
 package com.jakub.bone.api;
 
+import com.google.gson.Gson;
 import com.jakub.bone.database.Datasource;
 import com.jakub.bone.domain.SwiftRecord;
 import com.jakub.bone.service.SwiftCodeService;
@@ -15,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(urlPatterns = "/v1/swift-codes/*")
+@WebServlet(urlPatterns = {"/v1/swift-codes/*","/v1/swift-codes"})
 @Log4j2
 public class SwiftCodeServlet extends HttpServlet {
     private Datasource datasource;
@@ -32,12 +33,20 @@ public class SwiftCodeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String path = request.getPathInfo();
+
+            if (path == null || path.isEmpty()) {
+                log.warn("GET: Empty Invalid input: Empty SWIFT code request");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                service.send(response, Map.of("message", "Invalid input: Empty request. SWIFT code is required"));
+                return;
+            }
+
             String swiftCode = path.substring(1);
 
             SwiftRecord swiftRecord = service.findSwiftBySwiftCode(swiftCode);
 
             if (swiftRecord == null) {
-                log.warn("GET: No SWIFT code provided in the path");
+                log.warn("GET: No SWIFT code found");
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 service.send(response, Map.of("message", "Invalid input: SWIFT Record not found"));
             } else {
@@ -59,16 +68,45 @@ public class SwiftCodeServlet extends HttpServlet {
         }
     }
 
+    // Endpoint 3: Add a new SWIFT code record
+    // POST: /v1/swift-codes
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Gson gson = new Gson();
+        try {
+            SwiftRecord newRecord = gson.fromJson(request.getReader(), SwiftRecord.class);
+            if (newRecord == null || newRecord.getSwiftCode() == null || newRecord.getSwiftCode().isEmpty()) {
+                log.warn("POST: Invalid input - Correct data format is required");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                service.send(response, Map.of("message", "Invalid input: Correct data format is required"));
+                return;
+            }
+
+            service.createSwiftRecord(newRecord);
+
+            log.info("POST: Added new SWIFT Record with code: {}", newRecord.getSwiftCode());
+            response.setStatus(HttpServletResponse.SC_OK);
+            service.send(response, Map.of("message", "SWIFT Record added successfully"));
+        } catch (Exception ex) {
+            log.error("POST: Error while processing request", ex);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            service.send(response, Map.of("message", "Internal server error"));
+        }
+    }
+
+
+
     // Endpoint 4: Delete a SWIFT code record
     // DELETE: /v1/swift-codes/{swift-code}
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String path = request.getPathInfo();
-            if (path == null) {
-                log.warn("DELETE: No SWIFT code provided in the path");
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                service.send(response, Map.of("message", "Invalid input: SWIFT code is required"));
+
+            if (path == null || path.isEmpty()) {
+                log.warn("DELETE: Empty Invalid input: Empty SWIFT code request");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                service.send(response, Map.of("message", "Invalid input: Empty request. SWIFT code is required"));
                 return;
             }
 
