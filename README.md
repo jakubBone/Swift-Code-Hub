@@ -1,6 +1,6 @@
-# ✈️ Remitly Swift Hub
+# 🌐 Remitly Swift Hub
 
-[![Watch the video](src/main/resources/images/logo.png)](https://www.youtube.com/watch?v=eqqYM1RD8ZI)
+![](src/main/resources/logo.png)
 
 Remitly Swift Hub is a containerized Java application that parses SWIFT code data from an .xlsx file, 
 stores the data in a PostgreSQL database, and exposes a REST API to manage SWIFT records.
