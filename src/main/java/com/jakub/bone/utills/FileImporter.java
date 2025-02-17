@@ -12,13 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
-public class ExcelImporter {
-    private static final String file_path = ConfigLoader.get("database.swift_codes");
+public class FileImporter {
 
-    public static List<SwiftRecord> getExcelFile() throws IOException {
+    public static List<SwiftRecord> importExcelFile(String newPath) throws IOException {
         List<SwiftRecord> swiftCodes = new ArrayList<>();
 
-        try(FileInputStream fis = new FileInputStream(file_path);
+        try(FileInputStream fis = new FileInputStream(newPath);
             Workbook workbook = new XSSFWorkbook(fis)) {
             Sheet sheet = workbook.getSheetAt(0);
 

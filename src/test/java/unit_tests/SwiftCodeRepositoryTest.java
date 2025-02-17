@@ -28,7 +28,7 @@ public class SwiftCodeRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should test SWIFT records create")
+    @DisplayName("Should test SWIFT Record create")
     void testCreateSwiftRecord() throws SQLException {
         SwiftRecord record = new SwiftRecord("PL", "ABCDEFXXX", "Bank1", "Address1", "POLAND");
 
@@ -39,8 +39,8 @@ public class SwiftCodeRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should test SWIFT records find")
-    void testFindBySwiftCode() throws SQLException {
+    @DisplayName("Should test SWIFT Record find")
+    void testFindHeadquarterBySwiftCode() throws SQLException {
         SwiftRecord record = new SwiftRecord("PL", "ABCDEFXXX", "Bank1", "Address1", "POLAND");
 
         datasource.getCodeRepository().createSwiftRecord(record);
@@ -51,7 +51,7 @@ public class SwiftCodeRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should test SWIFT records delete")
+    @DisplayName("Should test SWIFT Record delete")
     void testDeleteSwiftRecord() throws SQLException {
         SwiftRecord record = new SwiftRecord("PL", "ABCDEFXXX", "Bank1", "Address1", "POLAND");
 
@@ -63,7 +63,7 @@ public class SwiftCodeRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should test SWIFT records find by countryISO2")
+    @DisplayName("Should test SWIFT Records find by countryISO2")
     void testFindAllByCountryIso2() throws SQLException {
         SwiftRecord record1 = new SwiftRecord("PL", "ABCDEFXXX", "Bank1", "Address1", "POLAND");
         SwiftRecord record2 = new SwiftRecord("PL", "ABCDEF111", "Bank2", "Address2", "POLAND");
@@ -92,7 +92,7 @@ public class SwiftCodeRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should test SWIFT records insert")
+    @DisplayName("Should test SWIFT Records insert")
     void testInsertSwiftRecords() throws SQLException {
         SwiftRecord record1 = new SwiftRecord("PL", "ABCDEFXXX", "Bank1", "Address1", "POLAND");
         SwiftRecord record2 = new SwiftRecord("PL", "ABCDEF111", "Bank2", "Address2", "POLAND");
@@ -116,7 +116,7 @@ public class SwiftCodeRepositoryTest {
     }
 
     @Test
-    @DisplayName("Should test SWIFT records find")
+    @DisplayName("Should test SWIFT Records find")
     void testFindAllBranchesByHeadquarter() throws SQLException {
         SwiftRecord hqRecord = new SwiftRecord("PL", "ABCDEFGHXXX", "Bank1", "Address1", "POLAND");
         SwiftRecord branchRecord1 = new SwiftRecord("PL", "ABCDEFGH111", "Bank2", "Address2", "POLAND");
