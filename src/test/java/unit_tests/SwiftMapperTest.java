@@ -1,7 +1,7 @@
 package unit_tests;
 
 import com.jakub.bone.domain.SwiftRecord;
-import com.jakub.bone.utills.SwiftMapper;
+import com.jakub.bone.utils.SwiftMapper;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

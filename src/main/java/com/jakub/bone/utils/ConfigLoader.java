@@ -1,4 +1,4 @@
-package com.jakub.bone.utills;
+package com.jakub.bone.utils;
 
 import lombok.extern.log4j.Log4j2;
 

@@ -2,9 +2,9 @@ package integration_tests;
 
 import com.jakub.bone.api.CountrySwiftCodeServlet;
 import com.jakub.bone.api.SwiftCodeServlet;
-import com.jakub.bone.database.Datasource;
+import com.jakub.bone.database.DataSource;
 import com.jakub.bone.domain.SwiftRecord;
-import com.jakub.bone.utills.SwiftMapper;
+import com.jakub.bone.utils.SwiftMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.eclipse.jetty.server.Server;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SwiftCodeServletTest {
     Server server;
-    Datasource datasource;
+    DataSource dataSource;
     @BeforeEach
     void setUp() throws SQLException {
        new Thread(() -> {
@@ -31,14 +31,14 @@ class SwiftCodeServletTest {
             server.setHandler(context);
 
             try {
-                datasource = new Datasource();
+                dataSource = new DataSource();
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
 
-            datasource.getDatabaseSchema().truncateTable();
+            dataSource.getDatabaseSchema().truncateTable();
 
-            context.setAttribute("datasource", datasource);
+            context.setAttribute("datasource", dataSource);
 
             // Init Servlet
             context.addServlet(new ServletHolder(new SwiftCodeServlet()), "/v1/swift-codes/*");
@@ -59,8 +59,8 @@ class SwiftCodeServletTest {
 
     @AfterEach
     void tearDown() throws Exception {
-        datasource.getDatabaseSchema().truncateTable();
-        datasource.closeConnection();
+        dataSource.getDatabaseSchema().truncateTable();
+        dataSource.closeConnection();
         server.stop();
     }
 
@@ -94,8 +94,8 @@ class SwiftCodeServletTest {
 
         SwiftRecord hqRecord = new SwiftRecord("PL", "ABCDEFGHXXX", "Bank1", "Address1", "POLAND");
         SwiftRecord branchRecord = new SwiftRecord("PL", "ABCDEFGH123", "Bank1", "Address1", "POLAND");
-        datasource.getCodeRepository().createSwiftRecord(hqRecord);
-        datasource.getCodeRepository().createSwiftRecord(branchRecord);
+        dataSource.getCodeRepository().createSwiftRecord(hqRecord);
+        dataSource.getCodeRepository().createSwiftRecord(branchRecord);
 
         // GET: /v1/swift-codes/{swift-code}
         RestAssured.baseURI = "http://localhost:8080";
@@ -137,7 +137,7 @@ class SwiftCodeServletTest {
     void testGetBranchBySwiftCodeWithCorrectInput() {
         waitForUpdate();
         SwiftRecord branchRecord = new SwiftRecord("PL", "ABCDEFGH123", "Bank1", "Address1", "POLAND");
-        datasource.getCodeRepository().createSwiftRecord(branchRecord);
+        dataSource.getCodeRepository().createSwiftRecord(branchRecord);
 
         // GET: /v1/swift-codes/{swift-code}
         RestAssured.baseURI = "http://localhost:8080";
@@ -189,8 +189,8 @@ class SwiftCodeServletTest {
         SwiftRecord record1 = new SwiftRecord("PL", "ABCDEFXXX", "Bank1", "Address1", "POLAND");
         SwiftRecord record2 = new SwiftRecord("PL", "ABCDEF111", "Bank2", "Address2", "POLAND");
 
-        datasource.getCodeRepository().createSwiftRecord(record1);
-        datasource.getCodeRepository().createSwiftRecord(record2);
+        dataSource.getCodeRepository().createSwiftRecord(record1);
+        dataSource.getCodeRepository().createSwiftRecord(record2);
 
         // GET: /v1/swift-codes/country/{countryISO2code}
         RestAssured.baseURI = "http://localhost:8080";
@@ -246,13 +246,13 @@ class SwiftCodeServletTest {
         waitForUpdate();
 
         SwiftRecord record = new SwiftRecord("PL", "ABCDEFXXX", "Bank1", "Address1", "POLAND");
-        datasource.getCodeRepository().createSwiftRecord(record);
+        dataSource.getCodeRepository().createSwiftRecord(record);
 
         // DELETE: /v1/swift-codes/{swift-code}
         RestAssured.baseURI = "http://localhost:8080";
         Response response = RestAssured.delete("/v1/swift-codes/ABCDEFXXX");
 
-        SwiftRecord result = datasource.getCodeRepository().findBySwiftCode("ABCDEFXXX");
+        SwiftRecord result = dataSource.getCodeRepository().findBySwiftCode("ABCDEFXXX");
 
         response.then().assertThat()
                 .statusCode(200)
@@ -270,7 +270,7 @@ class SwiftCodeServletTest {
         RestAssured.baseURI = "http://localhost:8080";
         Response response = RestAssured.delete("/v1/swift-codes/" + incorrectSwiftCode);
 
-        SwiftRecord result = datasource.getCodeRepository().findBySwiftCode("ABCDEFGHXXX");
+        SwiftRecord result = dataSource.getCodeRepository().findBySwiftCode("ABCDEFGHXXX");
 
         response.then().assertThat()
                 .statusCode(404)
@@ -297,7 +297,7 @@ class SwiftCodeServletTest {
                 .body("message",  equalTo("SWIFT Record added successfully"));
 
 
-        SwiftRecord createdRecord = datasource.getCodeRepository().findBySwiftCode("ABCDEFGHXXX");
+        SwiftRecord createdRecord = dataSource.getCodeRepository().findBySwiftCode("ABCDEFGHXXX");
 
         assertEquals("ABCDEFGHXXX", createdRecord.getSwiftCode());
     }

@@ -2,7 +2,7 @@ package com.jakub.bone.server;
 
 import com.jakub.bone.api.CountrySwiftCodeServlet;
 import com.jakub.bone.api.SwiftCodeServlet;
-import com.jakub.bone.database.Datasource;
+import com.jakub.bone.database.DataSource;
 import lombok.extern.log4j.Log4j2;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -12,8 +12,8 @@ import org.eclipse.jetty.servlet.ServletHolder;
 public class ServerManger {
     private Server server;
     private ServletContextHandler context;
-    private Datasource datasource;
-    public ServerManger(int port, Datasource datasource) throws Exception {
+    private DataSource datasource;
+    public ServerManger(int port, DataSource datasource) throws Exception {
         this.server = new Server(port);
         this.context = new ServletContextHandler();
         this.datasource = datasource;

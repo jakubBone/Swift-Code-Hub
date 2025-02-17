@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 import com.jakub.bone.repository.DatabaseSchema;
 import com.jakub.bone.repository.SwiftCodeRepository;
-import com.jakub.bone.utills.ConfigLoader;
+import com.jakub.bone.utils.ConfigLoader;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.jooq.DSLContext;
@@ -14,7 +14,7 @@ import org.jooq.impl.DSL;
 
 @Log4j2
 @Getter
-public class Datasource {
+public class DataSource {
     private final String url = ConfigLoader.get("database.url");
     private final String database = ConfigLoader.get("database.name");
     private final String username = ConfigLoader.get("database.username");
@@ -25,7 +25,7 @@ public class Datasource {
     private final SwiftCodeRepository codeRepository;
     private Connection connection;
 
-    public Datasource() throws SQLException {
+    public DataSource() throws SQLException {
         this.connection = getDatabaseConnection();
         this.context = DSL.using(connection);
         this.databaseSchema = new DatabaseSchema(context);
@@ -43,6 +43,7 @@ public class Datasource {
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
             log.error("Thread was interrupted while waiting", ex);
+            throw new SQLException("Thread was interrupted while waiting", ex);
         }
 
         try {
@@ -50,6 +51,7 @@ public class Datasource {
             log.info("Connection established successfully with database '{}' on port {}", database, 5432);
         } catch (SQLException ex) {
             log.error("Failed to establish connection to the database '{}'. Error: {}", database, ex.getMessage(), ex);
+            throw ex;
         }
         return connection;
     }

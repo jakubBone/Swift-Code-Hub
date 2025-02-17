@@ -36,6 +36,7 @@ public class SwiftCodeRepository {
             }
         } catch (org.jooq.exception.IntegrityConstraintViolationException ex) {
             log.error("Failed to INSERT Record: {}", ex.getMessage(),ex);
+            throw ex;
         }
     }
 
@@ -106,6 +107,7 @@ public class SwiftCodeRepository {
                     .execute();
         } catch (DataAccessException ex) {
             log.error("Failed to ADD new SWIFT Record: {}", ex.getMessage(), ex);
+            throw ex;
         }
     }
 
@@ -116,6 +118,7 @@ public class SwiftCodeRepository {
                     .execute();
         } catch (DataAccessException ex) {
             log.error("Failed to DELETE SWIFT Record: {}", ex.getMessage(), ex);
+            throw ex;
         }
     }
 }

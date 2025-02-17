@@ -1,9 +1,9 @@
 package com.jakub.bone.api;
 
-import com.jakub.bone.database.Datasource;
+import com.jakub.bone.database.DataSource;
 import com.jakub.bone.domain.SwiftRecord;
 import com.jakub.bone.service.SwiftCodeService;
-import com.jakub.bone.utills.SwiftMapper;
+import com.jakub.bone.utils.SwiftMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 
@@ -19,13 +19,13 @@ import java.util.Map;
 @WebServlet(urlPatterns = "/v1/swift-codes/country/*")
 @Log4j2
 public class CountrySwiftCodeServlet extends HttpServlet {
-    private Datasource datasource;
+    private DataSource dataSource;
     private SwiftCodeService service;
 
     @Override
     public void init() throws ServletException {
-        this.datasource = (Datasource) getServletContext().getAttribute("datasource");
-        this.service = new SwiftCodeService(datasource.getCodeRepository());
+        this.dataSource = (DataSource) getServletContext().getAttribute("datasource");
+        this.service = new SwiftCodeService(dataSource.getCodeRepository());
     }
 
     // Endpoint 2: Retrieve all SWIFT Records for a specific country

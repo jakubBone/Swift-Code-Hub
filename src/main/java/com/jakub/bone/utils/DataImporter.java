@@ -1,6 +1,6 @@
-package com.jakub.bone.utills;
+package com.jakub.bone.utils;
 
-import com.jakub.bone.database.Datasource;
+import com.jakub.bone.database.DataSource;
 import com.jakub.bone.domain.SwiftRecord;
 import lombok.extern.log4j.Log4j2;
 import org.apache.poi.ss.usermodel.*;
@@ -15,16 +15,16 @@ import java.util.List;
 
 @Log4j2
 public class DataImporter {
-    private Datasource datasource;
+    private DataSource dataSource;
 
-    public DataImporter(Datasource datasource) {
-        this.datasource = datasource;
+    public DataImporter(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     public void importSwiftRecords() throws IOException, SQLException {
         String filePath = ConfigLoader.get("database.swift_codes");
         List<SwiftRecord> swiftRecords = importExcelFile(filePath);
-        datasource.getCodeRepository().insertSwiftRecords(swiftRecords);
+        dataSource.getCodeRepository().insertSwiftRecords(swiftRecords);
         log.info("SWIFT Records imported successfully \n Records number: {}", swiftRecords.size());
     }
 

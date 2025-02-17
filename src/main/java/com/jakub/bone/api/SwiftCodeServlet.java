@@ -1,10 +1,10 @@
 package com.jakub.bone.api;
 
 import com.google.gson.Gson;
-import com.jakub.bone.database.Datasource;
+import com.jakub.bone.database.DataSource;
 import com.jakub.bone.domain.SwiftRecord;
 import com.jakub.bone.service.SwiftCodeService;
-import com.jakub.bone.utills.SwiftMapper;
+import com.jakub.bone.utils.SwiftMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,12 +19,12 @@ import java.util.Map;
 @WebServlet(urlPatterns = {"/v1/swift-codes/*","/v1/swift-codes"})
 @Log4j2
 public class SwiftCodeServlet extends HttpServlet {
-    private Datasource datasource;
+    private DataSource dataSource;
     private SwiftCodeService service;
     @Override
     public void init() throws ServletException {
-        this.datasource = (Datasource) getServletContext().getAttribute("datasource");
-        this.service = new SwiftCodeService(datasource.getCodeRepository());
+        this.dataSource = (DataSource) getServletContext().getAttribute("datasource");
+        this.service = new SwiftCodeService(dataSource.getCodeRepository());
     }
 
     // Endpoint 1: Retrieve details of a SWIFT Record
@@ -82,7 +82,7 @@ public class SwiftCodeServlet extends HttpServlet {
                 return;
             }
 
-            boolean recordExists = datasource.getCodeRepository().existsBySwiftCode(newRecord.getSwiftCode());
+            boolean recordExists = dataSource.getCodeRepository().existsBySwiftCode(newRecord.getSwiftCode());
 
             if(recordExists){
                 log.warn("POST: Duplicate - SWIFT code exists in data base");
