@@ -7,6 +7,9 @@ WORKDIR /app
 # Copy JAR
 COPY build/libs/RemitlySwiftHub.jar RemitlySwiftHub.jar
 
+# Copy .xlsx
+COPY src/main/resources/Interns_2025_SWIFT_CODES.xlsx /app/Interns_2025_SWIFT_CODES.xlsx
+
 # Application port
 EXPOSE 8080
 

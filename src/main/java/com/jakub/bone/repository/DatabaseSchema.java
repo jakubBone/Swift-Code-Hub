@@ -21,7 +21,7 @@ public class DatabaseSchema {
                 .column("address", SQLDataType.VARCHAR)
                 .column("country", SQLDataType.VARCHAR)
                 .constraints(
-                        DSL.constraint("PK_SWING_CODE").primaryKey("id"))
+                        DSL.constraint("PK_SWIFT_CODE").primaryKey("id"))
                 .execute();
     }
 
