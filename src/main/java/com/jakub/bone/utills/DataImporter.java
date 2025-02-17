@@ -1,5 +1,6 @@
 package com.jakub.bone.utills;
 
+import com.jakub.bone.database.Datasource;
 import com.jakub.bone.domain.SwiftRecord;
 import lombok.extern.log4j.Log4j2;
 import org.apache.poi.ss.usermodel.*;
@@ -8,13 +9,27 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileInputStream;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
-public class FileImporter {
+public class DataImporter {
+    private Datasource datasource;
 
-    public static List<SwiftRecord> importExcelFile(String newPath) throws IOException {
+    public DataImporter(Datasource datasource) {
+        this.datasource = datasource;
+    }
+
+    public void importSwiftRecords() throws IOException, SQLException {
+        String filePath = ConfigLoader.get("database.swift_codes");
+        List<SwiftRecord> swiftRecords = importExcelFile(filePath);
+        datasource.getCodeRepository().insertSwiftRecords(swiftRecords);
+        log.info("SWIFT Records imported successfully \n Records number: {}", swiftRecords.size());
+    }
+
+
+    private List<SwiftRecord> importExcelFile(String newPath) throws IOException {
         List<SwiftRecord> swiftCodes = new ArrayList<>();
 
         try(FileInputStream fis = new FileInputStream(newPath);
