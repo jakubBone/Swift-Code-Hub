@@ -13,7 +13,7 @@ public class DatabaseSchema {
     }
 
     public void createTable() {
-        context.createTableIfNotExists("swift_codes")
+        context.createTableIfNotExists("swift_code")
                 .column("id", SQLDataType.INTEGER.identity(true))
                 .column("country_iso2", SQLDataType.VARCHAR)
                 .column("swift_code", SQLDataType.VARCHAR)
@@ -21,12 +21,11 @@ public class DatabaseSchema {
                 .column("address", SQLDataType.VARCHAR)
                 .column("country", SQLDataType.VARCHAR)
                 .constraints(
-                        DSL.constraint("PK_SWING_CODES").primaryKey("id"))
+                        DSL.constraint("PK_SWING_CODE").primaryKey("id"))
                 .execute();
     }
 
-
-    public void clearTables(){
-        context.truncate("swift_codes").restartIdentity().execute();
+    public void truncateTable(){
+        context.truncate("swift_code").restartIdentity().execute();
     }
 }

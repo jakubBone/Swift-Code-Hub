@@ -18,12 +18,12 @@ public class SwiftCodeRepositoryTest {
     @BeforeEach
     void setUp() throws SQLException {
         datasource = new Datasource();
-        datasource.getDatabaseSchema().clearTables();
+        datasource.getDatabaseSchema().truncateTable();
     }
 
     @AfterEach
     void tearDown(){
-        datasource.getDatabaseSchema().clearTables();
+        datasource.getDatabaseSchema().truncateTable();
         datasource.closeConnection();
     }
 

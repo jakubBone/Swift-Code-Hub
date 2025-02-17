@@ -36,7 +36,7 @@ class SwiftCodeServletTest {
                 throw new RuntimeException(ex);
             }
 
-            datasource.getDatabaseSchema().clearTables();
+            datasource.getDatabaseSchema().truncateTable();
 
             context.setAttribute("datasource", datasource);
 
@@ -59,7 +59,7 @@ class SwiftCodeServletTest {
 
     @AfterEach
     void tearDown() throws Exception {
-        datasource.getDatabaseSchema().clearTables();
+        datasource.getDatabaseSchema().truncateTable();
         datasource.closeConnection();
         server.stop();
     }
