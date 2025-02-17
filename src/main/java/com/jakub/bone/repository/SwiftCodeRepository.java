@@ -21,8 +21,6 @@ public class SwiftCodeRepository {
         this.context = context;
     }
 
-
-    /////////////////
     public void insertSwiftRecords(List<SwiftRecord> swiftCodesRecords) throws SQLException {
         try {
             for (SwiftRecord code : swiftCodesRecords) {
@@ -41,7 +39,10 @@ public class SwiftCodeRepository {
         }
     }
 
-    //////////////////////
+    public boolean existsBySwiftCode(String swiftCode) {
+        return findBySwiftCode(swiftCode) != null;
+    }
+
     public SwiftRecord findBySwiftCode(String swiftCode) {
         return context.select(
                         SWIFT_CODES.COUNTRY_ISO2,
@@ -54,7 +55,6 @@ public class SwiftCodeRepository {
                 .fetchOneInto(SwiftRecord.class);
     }
 
-    //
     public List<SwiftRecord> findAllByCountryIso2(String countryIso2) {
         return context.select(
                         SWIFT_CODES.COUNTRY_ISO2,
@@ -67,7 +67,6 @@ public class SwiftCodeRepository {
                 .fetchInto(SwiftRecord.class);
     }
 
-    //
     public String findCountryByISO2(String countryIso2) {
         return context.select(SWIFT_CODES.COUNTRY)
                 .from(SWIFT_CODES)
@@ -90,7 +89,6 @@ public class SwiftCodeRepository {
                 .fetchInto(SwiftRecord.class);
     }
 
-    //////////////////
    public void createSwiftRecord(SwiftRecord swiftRecord) {
         try {
             context.insertInto(SWIFT_CODES,
@@ -111,7 +109,6 @@ public class SwiftCodeRepository {
         }
     }
 
-    ///
     public void deleteSwiftRecord(String swiftCode) {
         try {
             context.deleteFrom(SWIFT_CODES)

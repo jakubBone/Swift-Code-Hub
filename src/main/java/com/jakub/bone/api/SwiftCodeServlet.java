@@ -82,6 +82,15 @@ public class SwiftCodeServlet extends HttpServlet {
                 return;
             }
 
+            boolean recordExists = datasource.getCodeRepository().existsBySwiftCode(newRecord.getSwiftCode());
+
+            if(recordExists){
+                log.warn("POST: Duplicate - SWIFT code exists in data base");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                service.send(response, Map.of("message", "Duplicate: SWIFT code already exists"));
+                return;
+            }
+
             service.createSwiftRecord(newRecord);
 
             log.info("POST: Added new SWIFT Record with code: {}", newRecord.getSwiftCode());
@@ -93,8 +102,6 @@ public class SwiftCodeServlet extends HttpServlet {
             service.send(response, Map.of("message", "Internal server error"));
         }
     }
-
-
 
     // Endpoint 4: Delete a SWIFT code record
     // DELETE: /v1/swift-codes/{swift-code}

@@ -326,4 +326,34 @@ class SwiftCodeServletTest {
                 .body("message",  equalTo("Invalid input: Correct data format is required"));
 
     }
+
+    @Test
+    @DisplayName("Should test SWIFT Record POST with duplicate Record")
+    public void testPostRecoredWithDuplicate() {
+        waitForUpdate();
+
+        SwiftRecord record = new SwiftRecord("PL", "ABCDEFGHXXX", "Bank1", "Address1", "POLAND");
+        Map<String, Object> requestBody = SwiftMapper.mapIndependentBranchRecord(record);
+
+        // POST: /v1/swift-codes
+        RestAssured.baseURI = "http://localhost:8080";
+
+        // Add a new record
+        Response firstResponse = RestAssured.given()
+                .contentType("application/json")
+                .body(requestBody)
+                .post("/v1/swift-codes");
+        firstResponse.then().assertThat()
+                .statusCode(200)
+                .body("message", equalTo("SWIFT Record added successfully"));
+
+        // Duplicate the record
+        Response secondResponse = RestAssured.given()
+                .contentType("application/json")
+                .body(requestBody)
+                .post("/v1/swift-codes");
+        secondResponse.then().assertThat()
+                .statusCode(400)
+                .body("message", equalTo("Duplicate: SWIFT code already exists"));
+    }
 }

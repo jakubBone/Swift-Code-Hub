@@ -16,6 +16,10 @@ public class SwiftCodeService {
         this.repository = repository;
     }
 
+    public boolean existsInDatabaseBySwiftCode(String swiftCode) {
+        return repository.existsBySwiftCode(swiftCode);
+    }
+
     public SwiftRecord findSwiftBySwiftCode(String swiftCode) {
         return repository.findBySwiftCode(swiftCode);
     }
