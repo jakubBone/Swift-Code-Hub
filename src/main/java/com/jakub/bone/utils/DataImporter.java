@@ -36,7 +36,7 @@ public class DataImporter {
             Sheet sheet = workbook.getSheetAt(0);
 
             for (Row row : sheet) {
-                // Avoid first row (header)
+                // Avoid first row
                 if (row.getRowNum() == 0) {
                     continue;
                 }

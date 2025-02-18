@@ -40,7 +40,7 @@ public class SwiftCodeRepositoryTest {
 
     @Test
     @DisplayName("Should test SWIFT Record find")
-    void testFindHeadquarterBySwiftCode() throws SQLException {
+    void testFindRecordBySwiftCode() throws SQLException {
         SwiftRecord record = new SwiftRecord("PL", "ABCDEFXXX", "Bank1", "Address1", "POLAND");
 
         dataSource.getCodeRepository().createSwiftRecord(record);

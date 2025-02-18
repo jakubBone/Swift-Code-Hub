@@ -22,5 +22,4 @@ public class SwiftRecord {
         this.countryName = countryName;
         this.isHeadquarter = swiftCode.endsWith("XXX");
     }
-
 }

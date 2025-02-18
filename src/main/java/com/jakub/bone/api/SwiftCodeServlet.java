@@ -68,7 +68,7 @@ public class SwiftCodeServlet extends HttpServlet {
         }
     }
 
-    // Endpoint 3: Add a new SWIFT code record
+    // Endpoint 3: Add a new SWIFT code Record
     // POST: /v1/swift-codes
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -103,7 +103,7 @@ public class SwiftCodeServlet extends HttpServlet {
         }
     }
 
-    // Endpoint 4: Delete a SWIFT code record
+    // Endpoint 4: Delete a SWIFT code Record
     // DELETE: /v1/swift-codes/{swift-code}
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

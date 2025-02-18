@@ -19,6 +19,10 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
 
+/*
+This class contains integration tests for various REST API endpoints,
+ensuring proper functionality such as GET, POST, and DELETE operations.
+*/
 class SwiftCodeServletTest {
     Server server;
     DataSource dataSource;
