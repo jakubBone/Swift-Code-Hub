@@ -25,7 +25,7 @@ public class DataImporter {
         String filePath = ConfigLoader.get("database.swift_codes");
         List<SwiftRecord> swiftRecords = importExcelFile(filePath);
         dataSource.getCodeRepository().insertSwiftRecords(swiftRecords);
-        log.info("SWIFT Records imported successfully \n Records number: {}", swiftRecords.size());
+        log.info("SWIFT Records imported successfully. Records number: {}", swiftRecords.size());
     }
 
     private List<SwiftRecord> importExcelFile(String newPath) throws IOException {

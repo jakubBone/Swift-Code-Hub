@@ -13,8 +13,6 @@ public class ApiServer {
 
         // Import SWIFT data
         importer.importSwiftRecords();
-        log.info("????");
-
 
         // Init server
         ServerManger serverManager = new ServerManger(8080, datasource);

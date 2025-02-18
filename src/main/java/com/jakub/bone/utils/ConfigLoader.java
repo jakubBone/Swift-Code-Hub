@@ -24,7 +24,8 @@ public class ConfigLoader {
     }
 
     public static String get(String key) {
-        // for the key 'database.url' we check if the environment variable 'DATABASE_URL' exists
+        // For a key it checks if the environment variable exists
+        // e.g. if exists: database.url' -> 'DATABASE_URL'
         String envKey = key.toUpperCase().replace('.', '_'); // 'database.url' -> 'DATABASE_URL'
         String envValue = System.getenv(envKey);
         if (envValue != null && !envValue.isBlank()) {

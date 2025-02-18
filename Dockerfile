@@ -14,5 +14,5 @@ COPY src/main/resources/ /app/
 EXPOSE 8080
 
 # Run the application
-CMD ["java", "-Dlog4j.configurationFile=/app/log4j2.properties","-jar", "RemitlySwiftHub.jar"]
+CMD ["java","-jar", "RemitlySwiftHub.jar"]
 

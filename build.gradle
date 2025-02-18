@@ -13,10 +13,11 @@ repositories {
 }
 
 dependencies {
-
     // Log4j
     implementation 'org.apache.logging.log4j:log4j-core:2.23.0'
-    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.23.0'
+    implementation 'org.slf4j:slf4j-nop:1.7.36'
+
+
 
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.32'
@@ -75,6 +76,12 @@ jooq {
                 }
             }
         }
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'org.slf4j:slf4j-api:1.7.36'
     }
 }
 
