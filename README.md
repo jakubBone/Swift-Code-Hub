@@ -104,7 +104,10 @@ A sample docker-compose.yml is provided to orchestrate both the API and the Post
 1. **Configure the Environment**   
    Edit the `config.properties` if needed to update database credentials and file paths for the SWIFT .xlsx file
 
-2. **Run Docker Compose**   
+2. **Docker Desktop**     
+	Ensure that Docker Desktop is running before building and running the containers.
+
+3. **Run Docker Compose**   
    From the project root, run:
    ```bash
    docker-compose up --build
@@ -114,7 +117,7 @@ A sample docker-compose.yml is provided to orchestrate both the API and the Post
    - Build and run the API container using the provided Dockerfile.
    The REST API will be accessible at http://localhost:8080.
    
-3. **Running Tests**  
+4. **Running Tests**  
    Integration tests are written using JUnit and Rest Assured. To run tests, execute:
    ```bash
    ./gradlew test
