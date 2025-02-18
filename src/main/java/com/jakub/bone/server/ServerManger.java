@@ -13,9 +13,7 @@ public class ServerManger {
     private Server server;
     private ServletContextHandler context;
     private DataSource datasource;
-    private int port;
     public ServerManger(int port, DataSource datasource) throws Exception {
-        this.port = port;
         this.server = new Server(port);
         this.context = new ServletContextHandler();
         this.datasource = datasource;
@@ -30,7 +28,7 @@ public class ServerManger {
     public void startServer() {
         try {
             server.start();
-            log.info("Server is running on http://localhost:" + port);
+            log.info("Server is running");
             server.join();
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();

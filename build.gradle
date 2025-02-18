@@ -14,12 +14,19 @@ repositories {
 
 dependencies {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> 1374262cd0d8286ad15fc21c0288e33bb8b8d956
     // Log4j
     implementation 'org.apache.logging.log4j:log4j-core:2.23.0'
     implementation 'org.slf4j:slf4j-nop:1.7.36'
+=======
+
+    // Log4j
+    implementation 'org.apache.logging.log4j:log4j-core:2.23.0'
+    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.23.0'
+>>>>>>> parent of 6cc9c5b (refactor: improved readabilitu by renaming)
 
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.32'
@@ -78,12 +85,6 @@ jooq {
                 }
             }
         }
-    }
-}
-
-configurations.all {
-    resolutionStrategy {
-        force 'org.slf4j:slf4j-api:1.7.36'
     }
 }
 
