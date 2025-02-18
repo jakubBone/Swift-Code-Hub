@@ -19,7 +19,6 @@ public class DataSource {
     private final String database = ConfigLoader.get("database.name");
     private final String username = ConfigLoader.get("database.username");
     private final String password = ConfigLoader.get("database.password");
-
     private final DSLContext context;
     private final DatabaseSchema databaseSchema;
     private final SwiftCodeRepository codeRepository;
