@@ -30,7 +30,7 @@ public class ServerManger {
     public void startServer() {
         try {
             server.start();
-            log.info("Server is running on http://localhost:" + port);
+            log.info("Server is running on http://localhost:{}", port);
             server.join();
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
