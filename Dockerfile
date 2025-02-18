@@ -4,10 +4,8 @@ FROM eclipse-temurin:21-jdk
 # Working directory setting
 WORKDIR /app
 
-# Copy JAR
+# Copy files
 COPY build/libs/RemitlySwiftHub.jar RemitlySwiftHub.jar
-
-# Copy .xlsx
 COPY src/main/resources/ /app/
 
 # Application port
