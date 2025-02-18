@@ -28,7 +28,6 @@ public class DataImporter {
         log.info("SWIFT Records imported successfully \n Records number: {}", swiftRecords.size());
     }
 
-
     private List<SwiftRecord> importExcelFile(String newPath) throws IOException {
         List<SwiftRecord> swiftCodes = new ArrayList<>();
 
