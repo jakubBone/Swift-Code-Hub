@@ -14,8 +14,6 @@ repositories {
 dependencies {
     // Log4j , SLF4J
     implementation 'org.apache.logging.log4j:log4j-core:2.23.0'
-
-    // SLF4J to load 'org.slf4j.impl.StaticLoggerBinder'
     implementation 'org.slf4j:slf4j-nop:1.7.36'
 
     // Lombok
