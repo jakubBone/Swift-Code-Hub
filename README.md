@@ -84,9 +84,10 @@ Before running the project, make sure you have installed:
    ```
 
 2. **Configure the Database**  
-   Set up a PostgreSQL database:
-   - Create a database named `swift_db`
-   - Update the database credentials in the `config.properties` 
+    Set up a PostgreSQL database:
+   - Create new data base 
+   - Update gradle JOOQ configuration with your database credentials 
+   - Update `config.properties` file with your database credentials
 
 3. **Build the Project**   
    Use Gradle to build the project and the shadow JAR.
